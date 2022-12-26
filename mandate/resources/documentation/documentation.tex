@@ -1,0 +1,167 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{parskip}    % skip line
+\usepackage{fullpage}   % margins
+\usepackage{hyperref}   % hyper references and document setup
+\usepackage{xcolor}     % colors
+\usepackage{listings}   % format code
+\usepackage{biblatex}   % references
+\usepackage{graphicx}   % images
+\usepackage{fancyhdr}
+\usepackage{atbegshi}
+
+% Se scritta in italiano:
+% \usepackage[italian]{babel}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={Template - Documentation},
+    pdfpagemode=FullScreen,
+}
+
+\pagestyle{fancy}
+
+% \fancypagestyle{header-firstpage}
+% {
+%     \setlength\headheight{26pt}
+%     \fancyhf{}
+%     \lhead{\begin{picture}(0,0) \put(0,0){\includegraphics[width=1cm]{cpt.jpg}} \end{picture}}
+%     \fancyhead[CE,CO]{Scuola Arti e Mestieri Trevano \\ Sezione Informatica}
+%     \fancyfoot[L]{Titolo del progetto: Progetto - Nome Progetto\\ Alunno: Nicola Anghileri \\ Classe: I4AC \\ Anno scolastico: 2022/23 \\ Docente responsabile: Pascal Poncini}
+% }
+
+\fancypagestyle{header-pages}
+{
+    \setlength\headheight{26pt}
+    \setlength{\headsep}{30pt}
+    \fancyhf{}
+    \lhead{\begin{picture}(0,0) \put(0,0){\includegraphics[width=1cm]{cpt.jpg}} \end{picture}}
+    \fancyhead[C]{Scuola Arti e Mestieri Trevano \\ Progetto - Nome Progetto}
+    \fancyfoot[L]{Mario Rossi I4AC}
+    \fancyfoot[R]{\thepage}
+}
+
+\AtBeginShipout{%
+    \thispagestyle{header-pages}
+}
+
+\addbibresource{./references.bib}
+\graphicspath{ {./sections/images} }
+
+\newcommand{\quotes}[1]{``#1''}
+
+\title{%
+    Template Progetto \\
+    \large Documentation
+}
+
+\author{%
+    Mario Rossi \\
+    \large Scuola d'Arti e Mestieri di Trevano (SAMT)}
+
+\date{}
+
+\begin{document}
+
+%\thispagestyle{header-firstpage}
+
+\maketitle
+
+\pagebreak
+
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introduction}
+
+Esempio di citazione \cite{gitrepo}.
+
+\pagebreak
+
+\section{Requirements}
+
+\newcommand{\subreq}[3]{
+    \textbf{Req-#1\_#2} & #3 \\
+}
+
+\newcommand{\requirement}[7]{
+    \bgroup{}
+    \def\arraystretch{1.25}
+    \begin{center}
+        \begin{tabular}{ |l|p{9cm}| }
+            \hline
+            \multicolumn{2}{|c|}{\textbf{Req-#1}} \\
+            \hline
+            \textbf{Name} & #2 \\
+            \hline
+            \textbf{Priority} & #3 \\
+            \hline
+            \textbf{Version} & #4 \\
+            \hline
+            \textbf{Notes} & #5 \\
+            \hline
+            \textbf{Description} & #6 \\
+            \hline
+            \ifx&#7&%
+                % empty parameter
+            \else
+                \multicolumn{2}{|c|}{\textbf{Subrequirements}} \\
+                \hline
+                #7
+            \fi
+            \hline
+        \end{tabular}
+    \end{center}
+    \egroup{}
+}
+
+\requirement{00}{CLI tool}{1}{1.0}{none}{
+    A CLI tool to execute background removal must be developed
+}{
+    \subreq{00}{0}{The target image must be specified}
+    \subreq{00}{1}{The trimap image must be specified}
+    \subreq{00}{1}{The program can save the generated background mask}
+    \subreq{00}{1}{The program can remove the background and insert an image}
+    \subreq{00}{1}{The program can remove the background and fill it with a color}
+    \subreq{00}{1}{The program can remove the background and leave it transparent}
+}
+
+\requirement{01}{Image formats}{1}{1.0}{none}{
+    Multiple image formats must be supported
+}{
+    \subreq{00}{0}{The JPG format must be supported}
+    \subreq{00}{1}{The PNG format must be supported}
+    \subreq{00}{2}{The WebP format must be supported}
+}
+
+\requirement{02}{Size check}{1}{1.0}{none}{
+    The executable must assert that the target image and trimap are of the same size
+}{
+}
+
+\requirement{03}{GUI}{1}{1.0}{none}{
+    A GUI application must be developed in other to interact with the program features
+}{
+}
+
+\pagebreak
+
+\section{Conclusion}
+
+\pagebreak
+
+\listoffigures
+
+\pagebreak
+
+\nocite{*} % cita tutte le entry
+
+\printbibliography
+
+\end{document}
