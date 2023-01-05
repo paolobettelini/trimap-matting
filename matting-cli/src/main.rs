@@ -1,5 +1,9 @@
 use image::{DynamicImage, Rgba};
-use opencv::{core::{Vector, ToInputArray}, imgcodecs::*, prelude::*};
+use opencv::{
+    core::{ToInputArray, Vector},
+    imgcodecs::*,
+    prelude::*,
+};
 use std::{error::Error, fs};
 
 mod args;
@@ -35,15 +39,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mask: DynamicImage = opencv_to_dynamic_image_gray(output);
     let target: DynamicImage = opencv_to_dynamic_image(target);
 
-    let result = remove_background(target, mask);
+    //let result = remove_background(target, mask);
 
-    result.save("/home/paolo/Scrivania/trans.png")?;
+    let replacement = image::open("/home/paolo/Scrivania/background.jpg").unwrap();
+    let result = replace_background(target, mask, replacement);
+
+    result.save("/home/paolo/Scrivania/trans.jpg")?;
 
     Ok(())
 }
 
-use std::io::Cursor;
 use image::RgbImage;
+use std::io::Cursor;
 use std::io::Read;
 
 fn opencv_to_dynamic_image_gray(mat: Mat) -> DynamicImage {
@@ -52,16 +59,16 @@ fn opencv_to_dynamic_image_gray(mat: Mat) -> DynamicImage {
     let mut rgbim = RgbImage::new(w as u32, h as u32);
 
     let data = mat.data_bytes().unwrap();
-        let w = rgbim.width();
-        for (pixi, i) in (0..data.len()).enumerate() {
-            let b = data[i];
-            let g = data[i];
-            let r = data[i];
-            let impix = image::Rgb([r, g, b]);
-            let x = pixi as u32 % w;
-            let y = pixi as u32 / w;
-            rgbim.put_pixel(x, y, impix);
-        }
+    let w = rgbim.width();
+    for (pixi, i) in (0..data.len()).enumerate() {
+        let b = data[i];
+        let g = data[i];
+        let r = data[i];
+        let impix = image::Rgb([r, g, b]);
+        let x = pixi as u32 % w;
+        let y = pixi as u32 / w;
+        rgbim.put_pixel(x, y, impix);
+    }
     let im = DynamicImage::ImageRgb8(rgbim);
     im
 }
@@ -72,16 +79,16 @@ fn opencv_to_dynamic_image(mat: Mat) -> DynamicImage {
     let mut rgbim = RgbImage::new(w as u32, h as u32);
 
     let data = mat.data_bytes().unwrap();
-        let w = rgbim.width();
-        for (pixi, i) in (0..data.len()).step_by(3).enumerate() {
-            let b = data[i];
-            let g = data[i + 1];
-            let r = data[i + 2];
-            let impix = image::Rgb([r, g, b]);
-            let x = pixi as u32 % w;
-            let y = pixi as u32 / w;
-            rgbim.put_pixel(x, y, impix);
-        }
+    let w = rgbim.width();
+    for (pixi, i) in (0..data.len()).step_by(3).enumerate() {
+        let b = data[i];
+        let g = data[i + 1];
+        let r = data[i + 2];
+        let impix = image::Rgb([r, g, b]);
+        let x = pixi as u32 % w;
+        let y = pixi as u32 / w;
+        rgbim.put_pixel(x, y, impix);
+    }
     let im = DynamicImage::ImageRgb8(rgbim);
     im
 }
@@ -105,7 +112,6 @@ fn remove_background(image: DynamicImage, mask: DynamicImage) -> DynamicImage {
                 new_pixel[i] = ((mask_pixel[0] as u16 * image_pixel[i] as u16) / 255u16) as u8;
             }
             new_pixel[3] = mask_pixel[0];
-            //new_pixel[3] = 0;
 
             out.put_pixel(x, y, new_pixel);
         }
@@ -114,5 +120,37 @@ fn remove_background(image: DynamicImage, mask: DynamicImage) -> DynamicImage {
     out
 }
 
+fn replace_background(
+    image: DynamicImage,
+    mask: DynamicImage,
+    replacement: DynamicImage,
+) -> DynamicImage {
+    let mask = mask.as_rgb8().unwrap();
+    let image = image.as_rgb8().unwrap();
+    let replacement = replacement.as_rgb8().unwrap();
+
+    let (width, height) = image.dimensions();
+    let mut out = DynamicImage::new_rgba8(width, height);
+
+    for x in 0..width {
+        for y in 0..height {
+            let mask_pixel = mask.get_pixel(x, y);
+            let image_pixel = image.get_pixel(x, y);
+            let replacement_pixel = replacement.get_pixel(x, y);
+
+            let mut new_pixel = Rgba([0, 0, 0, 0]);
+            for i in 0..3 {
+                new_pixel[i] = ((mask_pixel[0] as u16 * image_pixel[i] as u16) / 255u16) as u8
+                    + (((255u16 - mask_pixel[0] as u16) * replacement_pixel[i] as u16) / 255u16)
+                        as u8;
+            }
+            new_pixel[3] = 255u8;
+
+            out.put_pixel(x, y, new_pixel);
+        }
+    }
+
+    out
+}
 
 // vtk opencv clang qt5-base cmake
