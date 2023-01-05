@@ -1,10 +1,10 @@
-use image::{DynamicImage, Rgba};
+use image::{RgbImage, DynamicImage, Rgba, GenericImage};
 use opencv::{
-    core::{ToInputArray, Vector},
+    core::{Vector},
     imgcodecs::*,
     prelude::*,
 };
-use std::{error::Error, fs};
+use std::{error::Error};
 
 mod args;
 use args::*;
@@ -20,9 +20,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let trimap = imread(&trimap_path, IMREAD_GRAYSCALE)?;
     let mut output = trimap.clone();
 
-    let res = opencv::alphamat::info_flow(&target, &trimap, &mut output);
+    let _res = opencv::alphamat::info_flow(&target, &trimap, &mut output);
 
-    let mut imwrite_flags = Vector::new();
+    let imwrite_flags = Vector::new();
     let res = imwrite(&output_path, &output, &imwrite_flags);
 
     if let Ok(success) = res {
@@ -37,21 +37,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     let mask: DynamicImage = opencv_to_dynamic_image_gray(output);
-    let target: DynamicImage = opencv_to_dynamic_image(target);
-
-    //let result = remove_background(target, mask);
+    let target: DynamicImage = opencv_to_dynamic_image(target); // &
 
     let replacement = image::open("/home/paolo/Scrivania/background.jpg").unwrap();
-    let result = replace_background(target, mask, replacement);
+    let replaced = replace_background(&target, &mask, &replacement);
 
-    result.save("/home/paolo/Scrivania/trans.jpg")?;
+    replaced.save("/home/paolo/Scrivania/replaced.jpg")?;
+
+    let transparent = remove_background(&target, &mask);
+
+    transparent.save("/home/paolo/Scrivania/transparent.png")?;
 
     Ok(())
 }
-
-use image::RgbImage;
-use std::io::Cursor;
-use std::io::Read;
 
 fn opencv_to_dynamic_image_gray(mat: Mat) -> DynamicImage {
     let w = mat.cols();
@@ -93,9 +91,7 @@ fn opencv_to_dynamic_image(mat: Mat) -> DynamicImage {
     im
 }
 
-use image::GenericImage;
-
-fn remove_background(image: DynamicImage, mask: DynamicImage) -> DynamicImage {
+fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> DynamicImage {
     let mask = mask.as_rgb8().unwrap();
     let image = image.as_rgb8().unwrap();
 
@@ -121,9 +117,9 @@ fn remove_background(image: DynamicImage, mask: DynamicImage) -> DynamicImage {
 }
 
 fn replace_background(
-    image: DynamicImage,
-    mask: DynamicImage,
-    replacement: DynamicImage,
+    image: &DynamicImage,
+    mask: &DynamicImage,
+    replacement: &DynamicImage,
 ) -> DynamicImage {
     let mask = mask.as_rgb8().unwrap();
     let image = image.as_rgb8().unwrap();
