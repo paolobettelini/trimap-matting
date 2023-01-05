@@ -25,13 +25,3 @@
 
 # Rust
 target
-
-# WASM
-dist
-pkg
-
-# npm
-node_modules
-
-# Vagrant
-.vagrant
