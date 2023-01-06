@@ -472,6 +472,15 @@ dependencies = [
  "clap",
  "csscolorparser",
  "image",
+ "matting-lib",
+ "opencv",
+]
+
+[[package]]
+name = "matting-lib"
+version = "0.1.0"
+dependencies = [
+ "image",
  "opencv",
 ]
 
