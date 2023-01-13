@@ -6,6 +6,9 @@
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{listings-rust}
 
 \hypersetup{
     colorlinks=true,
@@ -13,6 +16,16 @@
     urlcolor=blue,
     pdftitle={Paolo Bettelini - Diaries},
     pdfpagemode=FullScreen,
+}
+
+\definecolor{background}{HTML}{EEEEEE}
+
+\lstdefinestyle{generic} {
+    backgroundcolor=\color{background},
+    numbers=none,
+    basicstyle=\ttfamily\color{black},
+    breaklines=true,
+    frame=lines
 }
 
 \title{Diaries}
@@ -116,5 +129,98 @@ looking into the Rust GUI libraries. I also conitnued writing the requirements
 in the analysis section.
 
 The plan for the next working session is to finish the CLI tool.
+
+\subsection{2023-01-09}
+
+Work hours:\\
+\textbf{13:15 - 16:30}: CLI
+
+Within the last week I completed the CLI tool.
+The CLI tool is capable of genering soft masks given trimaps.
+It can also apply operations to images such as: making the background transparent,
+filling the background with a color or replacing the background with another image.
+
+\begin{lstlisting}[style=generic]
+    Matting CLI
+    
+    Usage: matting-cli [OPTIONS] --target <TARGET> <--mask <MASK>|--trimap <TRIMAP>>
+    
+    Options:
+      -i, --target <TARGET>        Target image
+          --mask <MASK>            Background mask image
+          --trimap <TRIMAP>        Trimap image
+          --save-mask <SAVE_MASK>  Save mask path
+      -o, --output <OUTPUT>        Output image
+      -f, --fill <FILL>            Fill background action
+      -t, --transparent            Transparent background action
+      -r, --replace <REPLACE>      Replace background action
+      -h, --help                   Print help information
+      -V, --version                Print version information
+\end{lstlisting}
+
+The CLI tool still lacks error handling. \\
+Another feature to add is the \texttt{--verbose} flag,
+which prints what the program is doing along with timestamps.
+
+\subsection{2023-01-10}
+
+Work hours:\\
+\textbf{08:20 - 9:50}: Error handling \\
+\textbf{10:05 - 11:00}: Verbose flag
+
+Today I handled every possible crash in the CLI tool.
+Whenever an errors occurs it prints the according message.
+I also started implemented the \texttt{--verbose} flag,
+which prints program statuses and timestamps.
+
+The plan for the next working session is to finish implementing the verbose flag.
+Next, the server application can be developed.
+
+\subsection{2023-01-11}
+
+Work hours:\\
+\textbf{15:00 - 16:20}: Verbose flag and refactor
+
+Today I continued implementing the \texttt{--verbose} flag.
+The CLI tool now prints what it is doing, but I haven't implemented the timestampts yet.
+I also did some refactoring of the code and cleanup.
+
+\subsection{2023-01-12}
+
+Work hours:\\
+\textbf{08:30 - 09:50}: CLI timestamps \\
+\textbf{10:05 - 11:20}: Documentation
+
+The CLI now fully supports the \texttt{--verbose} flag
+and prints the elapsed time for each operation.
+
+\begin{lstlisting}[style=boxed]
+> matting-cli -i target.jpg --trimap trimap.png --save-mask mask.png
+    --verbose -o out.png --fill red
+
+Reading target image... Done! [4.021485ms]
+Reading trimap image... Done! [1.976477ms]
+Generating soft mask... Done! [7.104532642s]
+Reading target image... Done! [178.884124ms]
+Saving soft mask... Done! [509.050896ms]
+Filling background with color... Done! [117.90393ms]
+Saving output... Done! [954.085622ms]
+\end{lstlisting}
+
+I created the \lstinline[style=Rust]{log!()} macro which executes
+an expression and logs a message and the elapsed time if a given flag is true.
+
+\begin{lstlisting}[style=Rust, style=boxed]
+    let mask = log!(
+        "Generating soft mask",
+        args.verbose,
+        matting::generate_mask(&target, &trimap)? // heavy lifting
+    );
+\end{lstlisting}
+
+In the second half of the working session I continued the documentation.
+I did not write any actual documentation, just boilerplate and useful stuff that I'll be using.
+
+The plan for the next working session is to crate the server worker.
 
 \end{document}

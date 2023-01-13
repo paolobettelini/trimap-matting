@@ -47,6 +47,10 @@ pub struct Args {
     /// Replace background action
     #[arg(short, long)]
     pub replace: Option<PathBuf>,
+
+    /// Verbose flag
+    #[arg(long)]
+    pub verbose: bool,
 }
 
 macro_rules! path_str {

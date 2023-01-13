@@ -9,65 +9,30 @@
 \usepackage{listings}   % format code
 \usepackage{biblatex}   % references
 \usepackage{graphicx}   % images
-\usepackage{fancyhdr}
-\usepackage{atbegshi}
+
+\usepackage{lpi}
 
 % Se scritta in italiano:
-% \usepackage[italian]{babel}
-
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    urlcolor=blue,
-    pdftitle={Template - Documentation},
-    pdfpagemode=FullScreen,
-}
-
-\pagestyle{fancy}
-
-% \fancypagestyle{header-firstpage}
-% {
-%     \setlength\headheight{26pt}
-%     \fancyhf{}
-%     \lhead{\begin{picture}(0,0) \put(0,0){\includegraphics[width=1cm]{cpt.jpg}} \end{picture}}
-%     \fancyhead[CE,CO]{Scuola Arti e Mestieri Trevano \\ Sezione Informatica}
-%     \fancyfoot[L]{Titolo del progetto: Progetto - Nome Progetto\\ Alunno: Nicola Anghileri \\ Classe: I4AC \\ Anno scolastico: 2022/23 \\ Docente responsabile: Pascal Poncini}
-% }
-
-\fancypagestyle{header-pages}
-{
-    \setlength\headheight{26pt}
-    \setlength{\headsep}{30pt}
-    \fancyhf{}
-    \lhead{\begin{picture}(0,0) \put(0,0){\includegraphics[width=1cm]{cpt.jpg}} \end{picture}}
-    \fancyhead[C]{Scuola Arti e Mestieri Trevano \\ Progetto - Nome Progetto}
-    \fancyfoot[L]{Mario Rossi I4AC}
-    \fancyfoot[R]{\thepage}
-}
-
-\AtBeginShipout{%
-    \thispagestyle{header-pages}
-}
+%\usepackage[italian]{babel}
 
 \addbibresource{./references.bib}
 \graphicspath{ {./sections/images} }
 
-\newcommand{\quotes}[1]{``#1''}
-
 \title{%
     Template Progetto \\
+    \phantom{} \\
+    \large Scuola d'Arti e Mestieri di Trevano (SAMT) \\
     \large Documentation
 }
 
-\author{%
-    Mario Rossi \\
-    \large Scuola d'Arti e Mestieri di Trevano (SAMT)}
+\author{Mario Rossi}
 
 \date{}
 
-\begin{document}
+\lpisetup%
+    {Trimap Matting}
 
-%\thispagestyle{header-firstpage}
+\begin{document}
 
 \maketitle
 
@@ -85,41 +50,6 @@ Esempio di citazione \cite{gitrepo}.
 \pagebreak
 
 \section{Requirements}
-
-\newcommand{\subreq}[3]{
-    \textbf{Req-#1\_#2} & #3 \\
-}
-
-\newcommand{\requirement}[7]{
-    \bgroup{}
-    \def\arraystretch{1.25}
-    \begin{center}
-        \begin{tabular}{ |l|p{9cm}| }
-            \hline
-            \multicolumn{2}{|c|}{\textbf{Req-#1}} \\
-            \hline
-            \textbf{Name} & #2 \\
-            \hline
-            \textbf{Priority} & #3 \\
-            \hline
-            \textbf{Version} & #4 \\
-            \hline
-            \textbf{Notes} & #5 \\
-            \hline
-            \textbf{Description} & #6 \\
-            \hline
-            \ifx&#7&%
-                % empty parameter
-            \else
-                \multicolumn{2}{|c|}{\textbf{Subrequirements}} \\
-                \hline
-                #7
-            \fi
-            \hline
-        \end{tabular}
-    \end{center}
-    \egroup{}
-}
 
 \requirement{00}{CLI tool}{1}{1.0}{none}{
     A CLI tool to execute background removal must be developed
@@ -152,7 +82,55 @@ Esempio di citazione \cite{gitrepo}.
 
 \pagebreak
 
-\section{Conclusion}
+\section{To use}
+
+\begin{lstlisting}[style=Rust, style=boxed]
+    let output = log!(
+        "Generating soft mask",
+        args.verbose,
+        matting::generate_mask(&target, &trimap)? // heavy lifting
+    );
+\end{lstlisting}
+
+\begin{lstlisting}[style=HTML, style=boxed]
+    <div>
+        <h1>Title</h1>
+    </div>
+\end{lstlisting}
+
+\begin{lstlisting}[style=JS, style=boxed]
+    function ciao() {
+        console.log("ee");
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[style=TOML, style=boxed]
+    # asd
+    hello = "valore"
+\end{lstlisting}
+
+\begin{lstlisting}[style=nginx, style=boxed]
+    server {
+        server_name = _;
+    }
+\end{lstlisting}
+
+\subsection{CLI}
+
+\hr
+
+\begin{lstlisting}[style=boxed]
+    $ matting-cli -i target.jpg --trimap trimap.png
+        --save-mask mask.png --verbose -o out.png --fill red
+    
+    Reading target image... Done! [4.021485ms]
+    Reading trimap image... Done! [1.976477ms]
+    Generating soft mask... Done! [7.104532642s]
+    Reading target image... Done! [178.884124ms]
+    Saving soft mask... Done! [509.050896ms]
+    Filling background with color... Done! [117.90393ms]
+    Saving output... Done! [954.085622ms]
+\end{lstlisting}
 
 \pagebreak
 

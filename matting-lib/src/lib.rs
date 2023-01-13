@@ -1,20 +1,38 @@
-use image::{DynamicImage, GenericImage, RgbImage, Rgba};
-use opencv::{core::Vector, imgcodecs::*, prelude::*};
+use image::{GenericImage, RgbImage, Rgba};
+use opencv::prelude::*;
 
-pub fn generate_mask(target: &Mat, trimap: &Mat) -> Mat {
+// Export imports
+pub use image::{DynamicImage};
+pub use opencv::imgcodecs::*;
+
+pub mod error;
+
+use error::*;
+
+const RGB_ERROR: &str = "Could not convert to RGB8";
+
+pub fn generate_mask(target: &Mat, trimap: &Mat) -> MessageResult<Mat> {
     let mut output = trimap.clone();
 
-    opencv::alphamat::info_flow(&target, &trimap, &mut output).unwrap();
+    opencv::alphamat::info_flow(&target, &trimap, &mut output)?;
 
-    output
+    Ok(output)
 }
 
-pub fn mat_to_dynamic_image_gray(mat: &Mat) -> DynamicImage {
+pub fn read_as_mat(filename: &str, flags: i32) -> MessageResult<Mat> {
+    Ok(imread(filename, flags)?)
+}
+
+pub fn read_as_image(filename: &str) -> MessageResult<DynamicImage> {
+    Ok(image::open(filename)?)
+}
+
+pub fn mat_to_dynamic_image_gray(mat: &Mat) -> MessageResult<DynamicImage> {
     let w = mat.cols();
     let h = mat.rows();
     let mut rgbim = RgbImage::new(w as u32, h as u32);
 
-    let data = mat.data_bytes().unwrap();
+    let data = mat.data_bytes()?;
     let w = rgbim.width();
     for (pixel, i) in (0..data.len()).enumerate() {
         let r @ g @ b = data[i];
@@ -24,12 +42,12 @@ pub fn mat_to_dynamic_image_gray(mat: &Mat) -> DynamicImage {
         rgbim.put_pixel(x, y, impix);
     }
 
-    DynamicImage::ImageRgb8(rgbim)
+    Ok(DynamicImage::ImageRgb8(rgbim))
 }
 
-pub fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> DynamicImage {
-    let mask = mask.as_rgb8().unwrap();
-    let image = image.as_rgb8().unwrap();
+pub fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> MessageResult<DynamicImage> {
+    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
+    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
 
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
@@ -49,17 +67,17 @@ pub fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> DynamicIm
         }
     }
 
-    out
+    Ok(out)
 }
 
 pub fn replace_background(
     image: &DynamicImage,
     mask: &DynamicImage,
     replacement: &DynamicImage,
-) -> DynamicImage {
-    let mask = mask.as_rgb8().unwrap();
-    let image = image.as_rgb8().unwrap();
-    let replacement = replacement.as_rgb8().unwrap();
+) -> MessageResult<DynamicImage> {
+    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
+    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
+    let replacement = replacement.as_rgb8().ok_or(RGB_ERROR)?;
 
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
@@ -82,12 +100,12 @@ pub fn replace_background(
         }
     }
 
-    out
+    Ok(out)
 }
 
-pub fn fill_background(image: &DynamicImage, mask: &DynamicImage, color: [u8; 4]) -> DynamicImage {
-    let mask = mask.as_rgb8().unwrap();
-    let image = image.as_rgb8().unwrap();
+pub fn fill_background(image: &DynamicImage, mask: &DynamicImage, color: [u8; 4]) -> MessageResult<DynamicImage> {
+    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
+    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
 
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
@@ -113,7 +131,7 @@ pub fn fill_background(image: &DynamicImage, mask: &DynamicImage, color: [u8; 4]
         }
     }
 
-    out
+    Ok(out)
 }
 
 
