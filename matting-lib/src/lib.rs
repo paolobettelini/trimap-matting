@@ -1,15 +1,13 @@
 use image::{GenericImage, RgbImage, Rgba};
-use opencv::prelude::*;
+use opencv::{core::Vector, prelude::*};
 
 // Export imports
-pub use image::{DynamicImage};
+pub use image::{ImageFormat, DynamicImage};
 pub use opencv::imgcodecs::*;
 
 pub mod error;
 
 use error::*;
-
-const RGB_ERROR: &str = "Could not convert to RGB8";
 
 pub fn generate_mask(target: &Mat, trimap: &Mat) -> MessageResult<Mat> {
     let mut output = trimap.clone();
@@ -19,12 +17,20 @@ pub fn generate_mask(target: &Mat, trimap: &Mat) -> MessageResult<Mat> {
     Ok(output)
 }
 
+pub fn bytes_to_mat(data: &[u8], flags: i32) -> MessageResult<Mat> {
+    Ok(imdecode(&Vector::from_slice(data), flags)?)
+}
+
 pub fn read_as_mat(filename: &str, flags: i32) -> MessageResult<Mat> {
     Ok(imread(filename, flags)?)
 }
 
 pub fn read_as_image(filename: &str) -> MessageResult<DynamicImage> {
     Ok(image::open(filename)?)
+}
+
+pub fn bytes_to_image(data: &[u8]) -> MessageResult<DynamicImage> {
+    Ok(image::load_from_memory(data)?)
 }
 
 pub fn mat_to_dynamic_image_gray(mat: &Mat) -> MessageResult<DynamicImage> {
@@ -45,10 +51,11 @@ pub fn mat_to_dynamic_image_gray(mat: &Mat) -> MessageResult<DynamicImage> {
     Ok(DynamicImage::ImageRgb8(rgbim))
 }
 
-pub fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> MessageResult<DynamicImage> {
-    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
-    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
+// .as_rgb8() -> pointer as rgb8
+// .to_rgb8() -> copy of image
+// .into_rgb8() -> pointer or copy is it not the correct format
 
+pub fn remove_background(image: &RgbImage, mask: &RgbImage) -> DynamicImage {
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
 
@@ -67,18 +74,14 @@ pub fn remove_background(image: &DynamicImage, mask: &DynamicImage) -> MessageRe
         }
     }
 
-    Ok(out)
+    out
 }
 
 pub fn replace_background(
-    image: &DynamicImage,
-    mask: &DynamicImage,
-    replacement: &DynamicImage,
-) -> MessageResult<DynamicImage> {
-    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
-    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
-    let replacement = replacement.as_rgb8().ok_or(RGB_ERROR)?;
-
+    image: &RgbImage,
+    mask: &RgbImage,
+    replacement: &RgbImage,
+) -> DynamicImage {
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
 
@@ -100,13 +103,14 @@ pub fn replace_background(
         }
     }
 
-    Ok(out)
+    out
 }
 
-pub fn fill_background(image: &DynamicImage, mask: &DynamicImage, color: [u8; 4]) -> MessageResult<DynamicImage> {
-    let mask = mask.as_rgb8().ok_or(RGB_ERROR)?;
-    let image = image.as_rgb8().ok_or(RGB_ERROR)?;
-
+pub fn fill_background(
+    image: &RgbImage,
+    mask: &RgbImage,
+    color: [u8; 4],
+) -> DynamicImage {
     let (width, height) = image.dimensions();
     let mut out = DynamicImage::new_rgba8(width, height);
 
@@ -131,9 +135,40 @@ pub fn fill_background(image: &DynamicImage, mask: &DynamicImage, color: [u8; 4]
         }
     }
 
-    Ok(out)
+    out
 }
 
+
+pub fn image_to_format(image: DynamicImage, format: ImageFormat) -> Vec<u8> {
+    use std::io::{Cursor, Read, Seek, SeekFrom};
+
+    let color = image.color();
+    let width = image.width();
+    let height = image.height();
+
+    // Implements `Seek` and `Write`
+    let mut cursor = Cursor::new(Vec::new());
+
+    let res = image::write_buffer_with_format(
+        &mut cursor,
+        &mut image.into_bytes(),
+        width,
+        height,
+        color,
+        format,
+    );
+
+    if res.is_err() {
+        return vec![];
+    }
+
+    // Read result
+    cursor.seek(SeekFrom::Start(0)).unwrap();
+    let mut buffer = Vec::new();
+    cursor.read_to_end(&mut buffer).unwrap();
+
+    buffer
+}
 
 /*
 fn opencv_to_dynamic_image(mat: &Mat) -> DynamicImage {

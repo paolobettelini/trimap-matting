@@ -1,0 +1,22 @@
+html {
+    margin: 0;
+}
+
+#container {
+    position: relative;
+}
+
+#trimap {
+    opacity: 0.75;
+    z-index: 2;
+}
+
+#image {
+    z-index: 1;
+}
+
+#trimap, #image {
+    position: absolute;
+    top: 200px;
+    left: 0;
+}

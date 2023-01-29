@@ -223,4 +223,121 @@ I did not write any actual documentation, just boilerplate and useful stuff that
 
 The plan for the next working session is to crate the server worker.
 
+\subsection{2023-01-17}
+
+Work hours:\\
+\textbf{08:30 - 11:20}: Server and API
+
+Today I starting implementing the backend worker to process
+the images. The route still does not work, althought the development
+of the webserver should go smoothly after this issue.
+
+The plan for the next working session is to continue the documentation.
+
+\subsection{2023-01-18}
+
+Work hours:\\
+\textbf{15:00 - 16:20}: Documentation
+
+Today I continued the documentation. I wrote the
+following sections:
+\begin{enumerate}
+    \item \texttt{Introduction/Information}
+    \item \texttt{Trimap Matting}
+\end{enumerate}
+
+\subsection{2023-01-19}
+
+Work hours:\\
+\textbf{08:30 - 10:40}: Webserver \\
+\textbf{10:40 - 11:00}: Helped a classmate \\
+\textbf{11:00 - 11:20}: Documentation
+
+Today I continued working on the backend. The webserver
+now serves the static webistes files. The upload root
+can read the image data.
+
+I also continued the documentation and wrote a small section
+about OpenCV (\texttt{OpenCV}).
+
+\subsection{2023-01-23}
+
+Work hours:\\
+\textbf{13:20 - 16:20}: Webserver and frontend
+
+Today I continued working on the backend and the frontend.
+The backend successfully receives POST requests containing an image
+and can read its data. The frontend can load images onto the canvas
+and send the canvas contents to the server. I also started
+implementing the brush feature. The canvas is already capable
+of simple painting features.
+
+\subsection{2023-01-24}
+
+Work hours:\\
+\textbf{08:30 - 11:20}: Frontend Trimap Painting
+
+Today I focused on implementing the painting feature on the frontend. \\
+When an image is uploaded, I can start painting over it. There are a few settings and features such as:
+\begin{itemize}
+    \item Brush size slider
+    \item Background / Forground selection
+    \item Opacity slider
+    \item Undo action
+    \item Clear canvas action
+\end{itemize}
+
+I still need to implement the redo feature, and the undo features does not work if the clear feature has been
+used previously. The plan for the next working session is to solely continue the documentation.
+
+\begin{figure}[h]
+    \begin{minipage}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{painting1.png}
+    \end{minipage}
+    \begin{minipage}{0.5\textwidth}
+        \includegraphics[width=\textwidth]{painting2.png}
+    \end{minipage}
+\end{figure}
+
+\subsection{2023-01-25}
+
+Work hours:\\
+\textbf{09:05 - 10:30}: Documentation
+
+Today I continued the documentation and wrote the following sections
+\begin{itemize}
+    \item \texttt{CLI/Compilation}
+    \item \texttt{CLI/Usage}
+    \item \texttt{CLI/Examples}
+\end{itemize}
+
+\subsection{2023-01-26}
+
+Work hours:\\
+\textbf{08:30 - 10:50}: Backend \\
+\textbf{10:50 - 11:10}: Helped a classmate \\
+\textbf{11:10 - 11:25}: Backend
+
+Today I continued the backend code. The website now sends both the \texttt{target}
+and \texttt{trimap} image. In the future it could just send \texttt{target} and \texttt{mask}.
+The backend is able to read the data image and convert it to the \texttt{opencv} types.
+Everything is ready to implement the processing logic on the backend.
+
+\subsection{2023-01-27}
+
+Work hours:\\
+\textbf{08:30 - 09:50}: Backend \\
+\textbf{12:30 - 13:50}: Backend and frontend
+
+Today I continued the backend logic and frontend UI.
+The server is still not able to generate a mask given the trimap.
+In order for it to work the trimap must be processed (transparent pixels \(\rightarrow\) gray ones). \\
+For now, the trimap is treated as the actual mask. The server removes the background and returns
+the image to the client, which displays it on the web page.
+
+The goal for the next session is to look into pre-processing the trimap
+and continuing the web UI.
+
+\pagebreak
+
 \end{document}

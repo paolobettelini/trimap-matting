@@ -5,6 +5,8 @@
 \RequirePackage{geometry}
 \RequirePackage{fancyhdr}
 \RequirePackage{lastpage}
+\RequirePackage{wrapfig}
+\RequirePackage{url}
 
 \RequirePackage{color}
 \RequirePackage{listings}
@@ -49,6 +51,18 @@
 \newcommand{\quotes}[1]{``#1''}
 
 \newcommand\hr{\par\vspace{-.5\ht\strutbox}\noindent\hrulefill\par\vspace{0.15cm}}
+
+\newcommand{\wrapfill}{
+    \par
+    \ifnum \value{WF@wrappedlines} > 0
+        \addtocounter{WF@wrappedlines}{-1}%
+        \null\vspace{
+            \arabic{WF@wrappedlines}
+            \baselineskip
+        }
+        \WFclear
+    \fi
+}
 
 % requirements
 

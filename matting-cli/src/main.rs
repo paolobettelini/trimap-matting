@@ -83,14 +83,14 @@ fn consume(args: Args) -> MessageResult<()> {
             log!(
                 "Removing background",
                 args.verbose,
-                matting::remove_background(&target, &mask)?
+                matting::remove_background(&target.into_rgb8(), &mask.into_rgb8())
             )
         } else if let Some(color) = args.fill {
             // Fill color option
 
             log!("Filling background with color", args.verbose, {
                 let color = csscolorparser::parse(&color).convert()?;
-                matting::fill_background(&target, &mask, color.to_rgba8())?
+                matting::fill_background(&target.into_rgb8(), &mask.into_rgb8(), color.to_rgba8())
             })
         } else if let Some(path) = args.replace {
             // Replace background option
@@ -105,7 +105,7 @@ fn consume(args: Args) -> MessageResult<()> {
             log!(
                 "Replacing background",
                 args.verbose,
-                matting::replace_background(&target, &mask, &replacement)?
+                matting::replace_background(&target.into_rgb8(), &mask.into_rgb8(), &replacement.into_rgb8())
             )
         } else {
             return error!("Argument parsing is corrupt and you should've never seen this message");

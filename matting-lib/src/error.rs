@@ -1,8 +1,9 @@
-use opencv::Error as OpencvError;
 use image::error::ImageError;
+use opencv::Error as OpencvError;
 
+#[derive(Debug)]
 pub struct MessageError {
-    pub message: String
+    pub message: String,
 }
 
 pub type MessageResult<T> = Result<T, MessageError>;
