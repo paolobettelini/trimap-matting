@@ -9,5 +9,6 @@ edition = "2021"
 warp = "0.3.3"
 futures = "0.3.25"
 tokio = { version = "1", features = ["full"] }
+csscolorparser = "0.6.2"
 
 matting-lib = { path = "../matting-lib" }

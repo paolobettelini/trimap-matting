@@ -1,0 +1,25 @@
+#view-on-gh {
+    z-index: 1;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(100deg, #4938aa 0%, #525679 100%);
+}
+
+input, button {
+    
+}
+
+input:disabled, button:disabled {
+    opacity: 0.5;
+}
+
+body {
+    background-image: linear-gradient(-225deg, #0e3458 0%, #1e3746 100%);
+    background-color: #0e3458;
+}
+
+#trimap {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: optimizeSpeed;
+}

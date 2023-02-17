@@ -1,92 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Trimap Matting Online</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Trimap Matting</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+    <link rel="stylesheet" href="style/style.css">
 </head>
-<body>
-    <input type="file" name="files" onchange="handleFileSelect(event)">
-    Upload a picture
 
-    <div id="container">
-        <canvas id="image" width="0" height="0"></canvas>
-        <canvas id="trimap" width="0" height="0"></canvas>
+<body class="leading-relaxed tracking-wide flex flex-col text-gray-100">
+    <!--Nav-->
+    <nav id="header" class="w-full z-30 top-0 text-white py-1 lg:py-6">
+        <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-2 lg:py-6">
+            <div class="pl-4 flex items-center py-3 px-4">
+                <a class="text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
+                    href="#">
+                    Trimap Matting Online
+                </a>
+            </div>
+    
+            <div class="block lg:hidden pr-4">
+                <button
+                    id="nav-toggle"
+                    class="flex items-center px-3 py-2 border rounded text-gray-100 border-gray-100 hover:text-gray-400 hover:border-gray-400 appearance-none focus:outline-none">
+                    <svg
+                        class="fill-current h-3 w-3"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <title>Menu</title>
+                        <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div
+                class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 text-black p-4 lg:p-0 z-20"
+                id="nav-content">
+                <ul class="list-reset lg:flex justify-end flex-1 items-center">
+                </ul>
+                <a id="view-on-gh" class="flex items-center
+                    rounded-full bg-slate-800 py-3 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400"
+                    href="https://github.com/paolobettelini/trimap-matting">
+                    <svg aria-hidden="true" viewBox="0 0 16 16" class="h-6 w-6 fill-slate-400 group-hover:fill-slate-500 dark:group-hover:fill-slate-300">
+                        <path d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"></path>
+                    </svg>
+                    <div class="pl-2">
+                        View on GitHub
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="text-center px-3 lg:px-0">
+        <h1
+            class="my-4 text-2xl md:text-3xl lg:text-5xl font-black leading-tight">
+            Online Trimap Matting algorithm
+        </h1>
+        <p class="leading-normal text-gray-100 text-base md:text-xl lg:text-2xl mb-8">
+            Remove or modify the background of images with complicated borders
+        </p>
+    </div>
+
+    <div>
+        <div class="container mx-auto mb-5">
+            <div class="container mx-auto mb-5">
+                <h1 class="mt-5 mb-5 font-extrabold">
+                    <span class="bg-blue-200 text-blue-800 text-4xl mr-5 font-semibold mr-2 px-2.5 py-0.5 rounded ">
+                        STEP 0
+                    </span>
+                    <span class="text-5xl underline" style="text-decoration-color: skyblue; text-decoration-thickness: 5px;">
+                        How does it work?
+                    </span>
+                </h1>
+
+                
+            <div class="flex justify-evenly">
+                <ol class="pl-10">
+                    <li class="border-l-2 border-green-600">
+                        <div class="md:flex flex-start">
+                            <div class="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full -ml-3.5">
+                                1
+                            </div>
+                            <div class="block p-6 rounded-lg shadow-lg bg-gray-100 max-w-md ml-6 mb-10">
+                                <div class="flex justify-between mb-4">
+                                <a href="#!" class="font-medium text-purple-600 hover:text-purple-700 focus:text-purple-800 duration-300 transition ease-in-out text-sm">Drawing a trimap</a>
+                                </div>
+                                <p class="text-gray-700">
+                                    The first step is to upload the target image and draw a trimap
+                                    on top of it. The trimap is comprised of 3 colors: white, gray and black.
+                                    The white color represents what you want to keep. The black color
+                                    represents what you want to discard, while the gray one represents
+                                    the border that the website has to delimit.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="border-l-2 border-green-600">
+                        <div class="md:flex flex-start">
+                            <div class="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full -ml-3.5">
+                                2
+                            </div>
+                            <div class="block p-6 rounded-lg shadow-lg bg-gray-100 max-w-md ml-6 mb-10">
+                                <div class="flex justify-between mb-4">
+                                <a href="#!" class="font-medium text-purple-600 hover:text-purple-700 focus:text-purple-800 duration-300 transition ease-in-out text-sm">Generating the mask</a>
+                                </div>
+                                <p class="text-gray-700">
+                                    Once you have drawn a trimap to delimit your object, you can make
+                                    the website generate a precise mask for your object. This is done
+                                    via the trimap matting algorithm. If you already have a mask you can
+                                    directly upload one. It is recommented to download the mask for future
+                                    use to avoid recreating it.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="border-l-2 border-green-600">
+                        <div class="md:flex flex-start">
+                            <div class="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full -ml-3.5">
+                                3
+                            </div>
+                            <div class="block p-6 rounded-lg shadow-lg bg-gray-100 max-w-md ml-6 mb-10">
+                                <div class="flex justify-between mb-4">
+                                <a href="#!" class="font-medium text-purple-600 hover:text-purple-700 focus:text-purple-800 duration-300 transition ease-in-out text-sm">Applying a transformation</a>
+                                </div>
+                                <p class="text-gray-700">
+                                    When the mask is ready you can use it to remove the background
+                                    of your target image. How do you want to discard the background?
+                                    You can choose between leaving it transparent, filling it with a color
+                                    or replacing it with an image. Note that the latter must be of the
+                                    exact same size of the target image.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="border-l-2 border-green-600">
+                        <div class="md:flex flex-start">
+                            <div class="bg-green-600 w-6 h-6 flex items-center justify-center rounded-full -ml-3.5">
+                                4
+                            </div>
+                            <div class="block p-6 rounded-lg shadow-lg bg-gray-100 max-w-md ml-6 mb-10">
+                                <div class="flex justify-between mb-4">
+                                <a href="#!" class="font-medium text-purple-600 hover:text-purple-700 focus:text-purple-800 duration-300 transition ease-in-out text-sm">Final result</a>
+                                </div>
+                                <p class="text-gray-700">
+                                    Great! You're done. You can download your final result if you want.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container mx-auto">
+        <hr class="w-full h-1 max-auto my-4 bg-red-400 border-0 rounded md_my-10 mb-20 mt-20">
+    </div>
+
+    <div class=""> <!-- color -->
+        <div class="container mx-auto mb-5">
+            <h1 class="mt-5 mb-5 font-extrabold">
+                <span class="bg-blue-200 text-blue-800 text-4xl mr-5 font-semibold mr-2 px-2.5 py-0.5 rounded ">
+                    STEP 1
+                </span>
+                <span class="text-5xl underline" style="text-decoration-color: skyblue; text-decoration-thickness: 5px;">
+                    Trimap Mask
+                </span>
+            </h1>
+    
+            <label for="image_input" class="block mb-2 text-sm font-medium text-gray-100 dark:text-white">
+                Upload Target image
+            </label>
+            <input type="file"
+                name="image_input"
+                onchange="handleImageFileSelect(event)"
+                autocomplete="off"
+                class="block w-full text-black border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark_placeholder-gray-400">
+            
+            <br>
+
+            <label for="brush-range"
+                class="block text-sm font-medium text-gray-100 dark:text-white">
+                Brush
+            </label>
+            <input type="range"
+                id="brush-range"
+                autocomplete="off"
+                min="1"
+                max="50"
+                value="20"
+                oninput="setBrushThickness(this.value);"
+                class="trimap-tool w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg dark:bg-gray-900"
+                disabled>
+
+            <label for="brush-range" class="block mt-2 text-sm font-medium text-gray-100">
+                Opacity
+            </label>
+            <input type="range"
+                autocomplete="off"
+                id="brush-range"
+                min="0"
+                max="1"
+                value="0.75"
+                step="0.05"
+                oninput="setTrimapOpacity(this.value);"
+                class="trimap-tool w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg dark:bg-gray-700"
+                disabled>
+                
+            <form class="mt-2">
+                <div class="flex justify-center">
+                    <div class="pr-5">
+                        <input
+                            type="checkbox"
+                            autocomplete="off"
+                            id="toggle-fill"
+                            class="trimap-tool"
+                            onclick="toggleFill()"
+                            disabled>
+                        <label for="toggle-fill">Fill</label>
+                    </div>
+                    <div class="pr-5">
+                        <input
+                            type="radio"
+                            name="brushtype"
+                            autocomplete="off"
+                            id="background"
+                            class="trimap-tool"
+                            onclick="setBackground()"
+                            checked 
+                            disabled>
+                        <label for="background">Background</label>
+                    </div>
+                    <div class="pr-5">
+                        <input
+                            type="radio"
+                            name="brushtype"
+                            autocomplete="off"
+                            id="foreground"
+                            class="trimap-tool"
+                            onclick="setForeground()"
+                            disabled>
+                        <label for="foreground">Foreground</label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            name="brushtype"
+                            autocomplete="off"
+                            id="border"
+                            class="trimap-tool"
+                            onclick="setBorder()"
+                            disabled>
+                        <label for="border">Border</label>
+                    </div>
+                </div>
+            </form>
+                
+            <br>
+            
+            <div class="flex justify-evenly">
+                <button class="trimap-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    onclick="clearTrimapCanvas();deleteHistory();"
+                    autocomplete="off"
+                    disabled>
+                    Clear
+                </button>
+                <button class="trimap-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    onclick="undo()"
+                    autocomplete="off"
+                    disabled>
+                    Undo
+                </button>
+            </div>
+   
+            <br>
+    
+            <div id="container" class="flex w-full justify-center">
+                <div class="relative">
+                    <canvas class="absolute top-0 left-0" id="trimap" width="0" height="0"></canvas>
+                    <canvas class="" id="image" width="0" height="0"></canvas>
+                </div>
+            </div>
+    
+            <div class="flex justify-center pt-5">
+                <button class="trimap-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    onclick="generateMask()"
+                    autocomplete="off"
+                    disabled>
+                    Generate mask
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto">
+        <hr class="w-full h-1 max-auto my-4 bg-red-400 border-0 rounded md_my-10 mb-20 mt-20">
     </div>
     
+    <div class="">
+        <div class="container mx-auto mb-5">
+            <h1 class="mt-5 mb-5 font-extrabold">
+                <span class="bg-blue-200 text-blue-800 text-4xl mr-5 font-semibold mr-2 px-2.5 py-0.5 rounded ">
+                    STEP 2
+                </span>
+                <span class="text-5xl underline" style="text-decoration-color: skyblue; text-decoration-thickness: 5px;">
+                    Alpha Matte Mask
+                </span>
+            </h1>
+            
+            <div class="px-3 lg:px-0 mb-5">
+                    <label for="mask_input" class="block mb-2 text-sm font-medium text-gray-100 dark:text-white">
+                        If you already have one you can directly upload it here
+                    </label>
+                    <input type="file"
+                        name="mask_input"
+                        autocomplete="off"
+                        onchange="handleMaskFileSelect(event)"
+                        class="block w-full text-black border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark_placeholder-gray-400">
+            </div>
 
-    <br>
-    Brush
-    <input type="range" min="1" max="50" value="20" oninput="setBrushThickness(this.value)">
-    <br>
-    Opacity
-    <input type="range" min="0" max="1" value="0.75" step="0.05" oninput="setTrimapOpacity(this.value)">
+            <div class="flex justify-evenly">
+                <img id="mask" class="mb-5">
+            </div>
 
-    <br>
+            <div class="flex justify-evenly">
+                <img id="mask-loading" class="hidden mb-5" width="200px" src="media/loading.gif" alt="Loading...">
+            </div>
 
-    <input type="radio" name="brushtype" id="background" onclick="setBackground(true)" checked>
-    <label for="background">Background</label>
-    <input type="radio" name="brushtype" id="foreground" onclick="setBackground(false)">
-    <label for="foreground">Foreground</label>
+            <div class="flex justify-evenly mb-5">
+                <button
+                    onclick="downloadMask()"
+                    class="mask-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    autocomplete="off"
+                    disabled>
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <br>
-    <button onclick="clearCanvas();deleteHistory();">Clear</button>
-    <br>
-    <button onclick="undo()">Undo</button>
-    <br>
-    <button onclick="processImage()">Send to server</button>
+    <div class="container mx-auto">
+        <hr class="w-full h-1 max-auto my-4 bg-red-400 border-0 rounded md_my-10 mb-20 mt-20">
+    </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <div class="">
+        <div class="container mx-auto mb-5">
+            <h1 class="mt-5 mb-5 font-extrabold">
+                <span class="bg-blue-200 text-blue-800 text-4xl mr-5 font-semibold mr-2 px-2.5 py-0.5 rounded ">
+                    STEP 3
+                </span>
+                <span class="text-5xl underline" style="text-decoration-color: skyblue; text-decoration-thickness: 5px;">
+                    Transformation
+                </span>
+            </h1>
 
-    <img id="result">
+            Select an operation to apply to the background of the image.
 
-    <script src="imageHandler.js"></script>
-    <script src="trimapPaint.js"></script>
+            <div class="pr-5">
+                <input type="radio"
+                    autocomplete="off"
+                    name="brushtype"
+                    autocomplete="off"
+                    id="transparent"
+                    onclick="transparentOption()"
+                    class="transform-tool"
+                    disabled
+                    checked>
+                <label for="transparent">Transparent background</label>
+            </div>
+            <div>
+                <!-- align vertically -->
+                <div class="space-x-2 flex items-center">
+                    <input type="radio"
+                        autocomplete="off"
+                        name="brushtype"
+                        id="fill"
+                        onclick="fillOption()"
+                        class="transform-tool"
+                        disabled>
+                    <label for="fill">Fill background with color</label>
+                    <input type="color" name="color" autocomplete="off" id="color_input" disabled>
+                </div>
+            </div>
+            <div>
+                <input type="radio"
+                    name="brushtype"
+                    autocomplete="off"
+                    id="replace"
+                    onclick="replaceOption()"
+                    class="transform-tool"
+                    disabled>
+                <label for="replace">Replace background with image</label>
+                <input type="file"
+                    name="replacement_input"
+                    id="replacement_input"
+                    autocomplete="off"
+                    onchange="handleReplacementFileSelect(event)"
+                    class="w-full text-black border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark_placeholder-gray-400"
+                    disabled>
+            </div>
+
+            <div class="flex justify-evenly mb-5 mt-5">
+                <img id="replacement">
+            </div>
+
+            <div class="flex justify-center pt-5">
+                <button
+                    class="transform-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    onclick="applyTransformation()"
+                    autocomplete="off"
+                    disabled>
+                    Apply transformation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto">
+        <hr class="w-full h-1 max-auto my-4 bg-red-400 border-0 rounded md_my-10 mb-20 mt-20">
+    </div>
+
+    <div>
+        <div class="container mx-auto mb-5">
+            <h1 class="mt-5 mb-5 font-extrabold">
+                <span class="bg-blue-200 text-blue-800 text-4xl mr-5 font-semibold mr-2 px-2.5 py-0.5 rounded ">
+                    STEP 4
+                </span>
+                <span class="text-5xl underline" style="text-decoration-color: skyblue; text-decoration-thickness: 5px;">
+                    Final Result
+                </span>
+            </h1>
+
+            <div class="flex justify-evenly">
+                <img id="result" class="mb-5">
+            </div>
+
+            <div class="flex justify-evenly">
+                <img id="result-loading" class="hidden mb-5" width="200px" src="media/loading.gif" alt="Loading...">
+            </div>
+
+            <div class="flex justify-evenly mb-5">
+                <button
+                    onclick="downloadFinalResult()"
+                    class="result-tool bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg inline-flex items-center"
+                    autocomplete="off"
+                    disabled>
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-20 p-4 rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 bg-gray-800">
+        <span class="text-sm text-gray-500 sm:text-center text-gray-400">@ 2023 Paolo Bettelini</span>
+        <ul class="flex flex-wrap items-center mt-3 text-sm text-gray-400 sm:mt-0">
+            <li>
+                <a href="" class="mr-4 hover:underline md:mr-6">GitHub</a>
+            </li>
+        </ul>
+    </footer>
+
+    <!-- scritps  -->
+    <script src="js/logicHandler.js"></script>
+    <script src="js/trimapPaint.js"></script>
+    <script src="js/dropdown.js"></script>
 </body>
 </html>

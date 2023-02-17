@@ -12,7 +12,7 @@ use std::path::PathBuf;
 #[command(group(
     ArgGroup::new("action")
         .required(false)
-        .requires("output")
+        //.requires("output")
         .args(["fill", "transparent", "replace"]),
 ))]
 pub struct Args {

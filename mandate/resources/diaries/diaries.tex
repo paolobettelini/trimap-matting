@@ -9,6 +9,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{listings-rust}
+\usepackage{wrapfig}
 
 \hypersetup{
     colorlinks=true,
@@ -16,6 +17,18 @@
     urlcolor=blue,
     pdftitle={Paolo Bettelini - Diaries},
     pdfpagemode=FullScreen,
+}
+
+\newcommand{\wrapfill}{
+    \par
+    \ifnum \value{WF@wrappedlines} > 0
+        \addtocounter{WF@wrappedlines}{-1}%
+        \null\vspace{
+            \arabic{WF@wrappedlines}
+            \baselineskip
+        }
+        \WFclear
+    \fi
 }
 
 \definecolor{background}{HTML}{EEEEEE}
@@ -339,5 +352,263 @@ The goal for the next session is to look into pre-processing the trimap
 and continuing the web UI.
 
 \pagebreak
+
+\subsection{2023-01-30}
+
+Work hours:\\
+\textbf{13:15 - 13:30}: Helped a classmante \\
+\textbf{13:30 - 16:20}: Frontend
+
+Today I focused on the frontend website. I'm using the \texttt{tailwind} CSS framework
+to style the page. So far the page is still a very early draft.
+
+I plan to structure the website as follows:
+\begin{enumerate}
+    \item \textbf{Introductory section}: an explanation about how the process works
+    \item \textbf{Upload image and trimap section}: uploading from and trimap drawing tools
+    \item \textbf{Mask section}: a place to see the generated or uploaded alpha mattes mask
+    \item \textbf{Transformation section}: a place to select the operation for the background
+    \item \textbf{Result section}: final result display
+\end{enumerate}
+
+\subsection{2023-01-31}
+
+Work hours:\\
+\textbf{08:20 - 11:20}: Frontend
+
+Today I continued the website code. The design is much better
+and I fixed a couple of bugs:
+\begin{itemize}
+    \item The painting brush would draw weird spikes when moving slow
+    \item The browser would keep the old input values upon a page refresh
+\end{itemize}
+The website now looks as follows:
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.60\textwidth]{web1.png}
+\end{figure}
+
+\pagebreak
+
+\subsection{2023-02-01}
+
+Work hours:\\
+\textbf{10:50 - 12:0}: Frontend and backend
+
+Today I started implementing the background \textit{transformation}
+feature on the website. I added a form to choose between
+\texttt{transparency}, \texttt{fill with color} or
+\texttt{replace with image}.
+I created the endpoint for this request and started implementing the logic.
+
+The plan for the next working session is to hopefully make this feature
+work.
+
+\subsection{2023-02-02}
+
+Work hours:\\
+\textbf{08:20 - 11:40}: Frontend and backend \\
+\textbf{11:40 - 12:10}: Frontend
+
+\begin{wrapfigure}{r}{10cm}
+    \vspace{-\intextsep}
+    \includegraphics[width=10cm]{web2.png}
+\end{wrapfigure}
+
+Today I implemented the background operation selection on the website.
+The user can choose wheter to replace the background with an image,
+fill it with a color or leave it transparent.
+
+I ended up creating 3 routes for each transformation. The routes now are
+\begin{itemize}
+    \item \textbf{/api/matting}
+    \item \textbf{/api/fill/color}
+    \item \textbf{/api/transparent}
+    \item \textbf{/api/replace}
+\end{itemize}
+
+Both the backend and frontend code are a bit messy and will definitly
+need some refactoring. \\
+I also continued the page design a bit.
+
+The plan for the next working session is to continue the documentation.
+
+\wrapfill
+
+\pagebreak
+
+\subsection{2023-02-03}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: Documentation \\
+\textbf{14:20 - 15:00}: Trimap processing.
+
+Today I continued the documentation.
+
+\begin{itemize}
+    \item Completed the \texttt{CLI/Examples} section
+    \item Added missing citations
+    \item Made the \texttt{Implementation} section(s)
+    \item Fixed various typos
+    \item Continued the \texttt{Trimap Matting} section
+\end{itemize}
+
+In the remaining time I started looking into
+preprocessing the client-sent trimap.
+I need to remove the alpha channel and replace the transparent pixels
+with a gray color.
+
+\subsection{2023-02-06}
+
+Work hours:\\
+\textbf{13:15 - 15:30}: Frontend \\
+\textbf{15:40 - 16:30}: Research
+
+Today I finally made the mask generation work.
+I rewrote the trimap painting system a bit such that the \textit{border}
+is a color (gray). However, the entire canvas is colored gray by default.
+
+The fundamental remaining things to do are the following:
+\begin{itemize}
+    \item Better website design (with a loading animation)
+    \item Better error handling (avoid core dumps and properly respond)
+\end{itemize}
+
+In the remaining time I did some research on how I could use the \texttt{rayon}
+crate to add multithreading to my image processing functions.
+
+\subsection{2023-02-07}
+
+Work hours:\\
+\textbf{08:20 - 11:20}: Frontend
+
+Today I continued the frontend.
+I added some logic in order to enable inputs/buttons only
+when they can be used. I added the download button
+under the mask image and the final result.
+I also refactored some code and commented it.
+
+\subsection{2023-02-08}
+
+Work hours:\\
+\textbf{08:20 - 11:20}: Discussed \\
+\textbf{11:20 - 12:50}: Implemented changes.
+
+Today I discussed with my supervisor about
+core dumps of the opencv library and some
+error handling. I started implementing some minor functionality changes
+in the CLI program.
+
+\subsection{2023-02-09}
+
+Work hours:\\
+\textbf{08:20 - 11:00}: CLI tool
+
+Today I made some changes to the CLI tool. Namely,
+if the \texttt{--output} parameter is not specified then it will
+generate a name with the current timestamp (like \texttt{target\_20230209-09:52:23.jpg}). If the user
+wants to save an image with transparency as something other than a \texttt{png}, he
+will be warned about it.
+
+In the second half of the working session I implemented the size checks, refactored some code,
+did some tests and then read the specific requirements of the project.
+
+\subsection{2023-02-10}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: Documentation \\
+\textbf{12:30 - 13:40}: Documentation
+
+Today I continued the documentation.
+I created or continued the following sections:
+\begin{itemize}
+    \item \texttt{Glossary}
+    \item \texttt{OpenCV.Rust Binding}
+    \item \texttt{OpenCV.Matting library}
+\end{itemize}
+
+I also fixed the default filename with the timestamp
+(es. \texttt{target\_20230209-095223.jpg}).
+
+\subsection{2023-02-13}
+
+Work hours:\\
+\textbf{13:15 - 16:15}: Frontend
+
+Today I improved the frontend design (composition, titles, colors).
+I fixed the autocomplete behavior of the inputs.
+I also implemented the same-size check on the backend transformation
+routes.
+
+\subsection{2023-02-14}
+
+Work hours:\\
+\textbf{08:20 - 11:20}: Frontend
+
+Today I kept developing the frontend page.
+\begin{itemize}
+    \item I implemented the image-size checks on the frontend.
+    \item I added a loading gif when an image is processing.
+    \item Better design and colors.
+\end{itemize}
+
+The plan for the next working session is to implement the bucket painting tool.
+I figured it'd be very useful.
+
+\subsection{2023-02-15}
+
+Work hours:\\
+\textbf{10:35 - 12:10}: Bucket tool
+
+Today I started implementing the bucket/fill tool.
+The algorithm works and I just need to implement it
+as a feature.
+
+\pagebreak
+
+\subsection{2023-02-16}
+
+Work hours:\\
+\textbf{08:30 - 11:25}: Bucket tool
+
+Today I finished implementing the fill/bucket tool.
+I fixed some bugs regarding this tool, for instance,
+sometimes it would go into an infinite loop.
+I also added a footer to the website.
+
+Althought the fill tool works, when an enclosed area is filled,
+a thin layer of pixels of the color that's being replaced
+would remain at the border of the enclosed area.
+This is due to sub-pixel rendering/anti-aliasing. It would be best both for the trimap
+and the flood fill not to have anti-aliasing.
+I could not turn it off and instead implemented a more tolerant
+algorithm which only checks if the nearest pixel is
+one of the two colors (out of three) which are not being
+used to fill, rather than checking if the color is not equal
+to the one of the fillage.
+
+The plan for the next working session is to
+continue the documentation and try to turn off the antialiasing.
+
+\subsection{2023-02-17}
+
+Work hours:\\
+\textbf{08:30 - 09:50}: Documentation \\
+\textbf{12:30 - 13:30}: Documentation \\
+\textbf{13:30 - 14:00}: Frontend
+
+Today I continued the documentation.
+I created or modified the following sections
+\begin{itemize}
+    \item \texttt{OpenCV.Trimap colors}
+    \item \texttt{Implementation.Website.Drawing mechanics}
+    \item \texttt{Implementation.Website.Flood fill}
+    \item \texttt{Implementation.Website.Undo feature}
+\end{itemize}
+
+I also tried to disable the anti-aliasing but the smoothing is still there.
+
+The plan for the next working session is to make the server
+(optionally) use the CLI tool to compute matting operations.
 
 \end{document}

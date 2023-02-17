@@ -20,6 +20,12 @@
 *.bcf
 *.run.xml
 
+# Glossaries
+*.glg
+*.glo
+*.gls
+*.ist
+
 # OS X
 .DS_Store
 

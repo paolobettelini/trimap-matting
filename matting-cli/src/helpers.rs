@@ -40,14 +40,14 @@ macro_rules! log {
         if $log {
             use std::io::Write;
 
-            print!("{}...", $v);
+            print!("{}... ", $v);
             let _ = std::io::stdout().flush();
 
             let start = std::time::Instant::now();
             let _res = $body;
             let elapsed = start.elapsed();
             
-            println!(" Done! [{:?}]", elapsed);
+            println!("Done! [{:?}]", elapsed);
             
             _res
         } else {

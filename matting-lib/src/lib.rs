@@ -16,6 +16,14 @@ pub fn generate_mask(target: &Mat, trimap: &Mat) -> MessageResult<Mat> {
 
     Ok(output)
 }
+use std::path::Path;
+
+pub fn same_size<P: AsRef<Path>>(path1: P, path2: P) -> MessageResult<bool> {
+    let dim1 = image::image_dimensions(path1)?;
+    let dim2 = image::image_dimensions(path2)?;
+
+    Ok(dim1.0 == dim2.0 && dim1.1 == dim2.1)
+}
 
 pub fn bytes_to_mat(data: &[u8], flags: i32) -> MessageResult<Mat> {
     Ok(imdecode(&Vector::from_slice(data), flags)?)
@@ -127,9 +135,7 @@ pub fn fill_background(
                     + ((255u16 - mask_pixel[0] as u16) * replacement_pixel[i] as u16) / 255u16)
                     as u8;
             }
-            // Add opacities
-            let v = mask_pixel[0] as u16 + replacement_pixel[3] as u16;
-            new_pixel[3] = if v > 255 { 255 } else { v as u8 };
+            new_pixel[3] = 255u8;
 
             out.put_pixel(x, y, new_pixel);
         }
@@ -138,14 +144,13 @@ pub fn fill_background(
     out
 }
 
-
 pub fn image_to_format(image: DynamicImage, format: ImageFormat) -> Vec<u8> {
     use std::io::{Cursor, Read, Seek, SeekFrom};
 
     let color = image.color();
     let width = image.width();
     let height = image.height();
-
+    
     // Implements `Seek` and `Write`
     let mut cursor = Cursor::new(Vec::new());
 
@@ -169,24 +174,3 @@ pub fn image_to_format(image: DynamicImage, format: ImageFormat) -> Vec<u8> {
 
     buffer
 }
-
-/*
-fn opencv_to_dynamic_image(mat: &Mat) -> DynamicImage {
-    let w = mat.cols();
-    let h = mat.rows();
-    let mut rgbim = RgbImage::new(w as u32, h as u32);
-
-    let data = mat.data_bytes().unwrap();
-    let w = rgbim.width();
-    for (pixi, i) in (0..data.len()).step_by(3).enumerate() {
-        let b = data[i];
-        let g = data[i + 1];
-        let r = data[i + 2];
-        let impix = image::Rgb([r, g, b]);
-        let x = pixi as u32 % w;
-        let y = pixi as u32 / w;
-        rgbim.put_pixel(x, y, impix);
-    }
-    let im = DynamicImage::ImageRgb8(rgbim);
-    im
-}*/

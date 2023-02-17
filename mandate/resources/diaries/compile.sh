@@ -3,9 +3,7 @@
 MAIN_FILE="diaries"
 
 if [ "$1" = "--help" ] || [ "$1" == "-h" ]; then
-    echo "usage: ${0} [--bibtex]"
-    echo ""
-    echo "--bibtex     Compile new bibtex references using biber"
+    echo "usage: ${0}"
 
     exit 0
 fi
@@ -15,13 +13,7 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 cd $SCRIPT_DIR
 
-lualatex "${MAIN_FILE}.tex"
-
-if [ "$1" = "--bibtex" ]; then
-    biber $MAIN_FILE
-    lualatex "${MAIN_FILE}.tex"
-    lualatex "${MAIN_FILE}.tex"
-fi
+tectonic "${MAIN_FILE}.tex"
 
 mv "${MAIN_FILE}.pdf" ../../
 
