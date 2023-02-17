@@ -4,7 +4,7 @@ var backgroundColor = '#000000';
 var foregroundColor = '#FFFFFF';
 var borderColor = '#808080';
 
-let intColor1 = hexToInt(borderColor);
+let intColor1 = hexToInt(backgroundColor);
 let intColor2 = hexToInt(foregroundColor);
 let intColor3 = hexToInt(borderColor);
 
