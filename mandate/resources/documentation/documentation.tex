@@ -3,14 +3,12 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{parskip}    % skip line
-\usepackage{biblatex}   % references
+\usepackage[backend=bibtex]{biblatex}   % references
 \usepackage[hang]{subfigure}
 \usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
 \usepackage{makecell}
 \usepackage{fvextra}
-
-
 \usepackage{adjustbox}
 
 \usepackage{lpi}
@@ -539,7 +537,60 @@ The following command starts the server and logs everything to a file.
     $ matting-web -w /path/to/wwww -l logfile.log
 \end{lstlisting}
 
-\pagebreak
+% Weird ancient length stuff
+\newlength{\mtL}
+
+% FOR A4
+\setlength{\mtL}{.8\paperheight}% the next hsize
+% FOR A3
+%\setlength{\mtL}{1.7\paperwidth}
+
+\addtolength\mtL{-\headwidth}
+\newpage
+\addtolength\headwidth{\mtL}
+
+% Flip page
+
+% FOR A3
+%\pdfpagewidth=2\paperwidth
+% FOR A4
+\pdfpageheight=\paperwidth
+\pdfpagewidth=\paperheight
+\paperwidth=\pdfpagewidth
+\paperheight=\pdfpageheight
+
+% Text width and text height
+\begingroup
+\vsize=.8\pdfpageheight % do what you like
+\hsize=.8\pdfpagewidth  % do what you like
+\textwidth=\hsize
+\textheight=\vsize
+
+% -- CONTENT --
+
+\section{Planning}
+
+\subsection{Initial Gantt chart}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{media/gantt1.jpg}
+\end{figure}
+
+% -- CONTENT --
+
+\endgroup
+\newpage
+\addtolength\headwidth{-1\mtL}
+
+% Unflip page
+
+% FOR A3
+%\pdfpagewidth=\paperwidth
+% FOR A4
+\paperwidth=\pdfpageheight
+\paperheight=\pdfpagewidth
+\pdfpageheight=\paperheight
+\pdfpagewidth=\paperwidth
 
 \section{Implementation}
 
