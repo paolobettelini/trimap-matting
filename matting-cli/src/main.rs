@@ -16,13 +16,27 @@ use helpers::*;
 
 const TIMESTAMP: &str = "%Y%m%d-%H%M%S";
 
+const LOG_ENV: &str = "MATTING_LOG";
+const LOG_ENV_STYLE: &str = "MATTING_LOG_STYLE";
+
 fn main() {
     let args = Args::parse();
+
+    if args.verbose {
+        std::env::set_var(LOG_ENV, "info");
+    } else if std::env::var(LOG_ENV).is_err() {
+        std::env::set_var(LOG_ENV, "warn");
+    }
+
+    let env = env_logger::Env::new()
+        .filter(LOG_ENV)
+        .write_style(LOG_ENV_STYLE);
+    env_logger::init_from_env(env);
 
     let result = consume(args);
 
     if let Err(error) = result {
-        println!("An error occured: {}", error.message);
+        error!("An error occured: {}", error.message);
     }
 }
 
@@ -33,7 +47,6 @@ fn consume(args: Args) -> MessageResult<()> {
         // Trimap is given
         let target = log!(
             "Reading target image",
-            args.verbose,
             matting::read_as_mat(&target_path, IMREAD_COLOR)?
         );
 
@@ -41,18 +54,16 @@ fn consume(args: Args) -> MessageResult<()> {
 
         let trimap = log!(
             "Reading trimap image",
-            args.verbose,
             matting::read_as_mat(&trimap_path, IMREAD_GRAYSCALE)?
         );
 
         // Check trimap and target sizes
         if !same_size(&trimap_path, &target_path)? {
-            return error!("The trimap and target image must be of the same size.");
+            return msgerror!("The trimap and target image must be of the same size.");
         }
 
         let output = log!(
             "Generating soft mask",
-            args.verbose,
             matting::generate_mask(&target, &trimap)?
         );
 
@@ -63,31 +74,35 @@ fn consume(args: Args) -> MessageResult<()> {
             let mask_path = path_str!(mask_path);
 
             if !same_size(&mask_path, &target_path)? {
-                return error!("The mask and target image must be of the same size.");
+                return msgerror!("The mask and target image must be of the same size.");
             }
 
             log!(
                 "Reading soft mask image",
-                args.verbose,
                 matting::read_as_image(&mask_path)?
             )
         } else {
-            return error!("Argument parsing is corrupt and you should've never seen this message");
+            return msgerror!("Argument parsing is corrupt and you should've never seen this message");
         }
     };
 
     let target = log!(
         "Reading target image",
-        args.verbose,
         matting::read_as_image(&target_path)?
     );
 
     // Save mask option
-    if let Some(path) = args.save_mask {
-        let output_path = path_str!(path);
+    if let Some(parameter) = args.save_mask {
+        let output_path = if let Some(path) = parameter {
+            path_str!(path)
+        } else {
+            let timestamp = get_timestamp();
+
+            format!("mask_{timestamp}.png")
+        };
+        
         log!(
-            "Saving soft mask to {output_path}",
-            args.verbose,
+            format!("Saving soft mask to {output_path}"),
             mask.save(output_path)?
         );
     }
@@ -99,7 +114,6 @@ fn consume(args: Args) -> MessageResult<()> {
 
         log!(
             "Removing background",
-            args.verbose,
             matting::remove_background(&target.into_rgb8(), &mask.into_rgb8())
         )
     } else if let Some(color) = args.fill {
@@ -107,7 +121,7 @@ fn consume(args: Args) -> MessageResult<()> {
 
         let color = csscolorparser::parse(&color).convert()?;
 
-        log!("Filling background with color", args.verbose,
+        log!("Filling background with color",
             matting::fill_background(&target.into_rgb8(), &mask.into_rgb8(), color.to_rgba8())
         )
     } else if let Some(path) = args.replace {
@@ -117,18 +131,16 @@ fn consume(args: Args) -> MessageResult<()> {
 
         // Check target and replacement sizes
         if !same_size(&replacement_path, &target_path)? {
-            return error!("The replacement and target image must be of the same size.");
+            return msgerror!("The replacement and target image must be of the same size.");
         }
 
         let replacement = log!(
             "Reading replacement image",
-            args.verbose,
             matting::read_as_image(&replacement_path)?
         );
 
         log!(
             "Replacing background",
-            args.verbose,
             matting::replace_background(&target.into_rgb8(), &mask.into_rgb8(), &replacement.into_rgb8())
         )
     } else {
@@ -160,11 +172,11 @@ fn consume(args: Args) -> MessageResult<()> {
 
     // Notify if there is transparency and it's not a png
     if args.transparent && !output_path.ends_with(".png") {
-        println!("WARNING: The image has an alpha channel but the format is not PNG.");
-        println!("It is advised to change the output format to \".png\"");
+        warn!("The image has an alpha channel but the format is not PNG.");
+        warn!("It is advised to change the output format to \".png\"");
     }
 
-    log!(format!("Saving output to {output_path}"), args.verbose, result.save(output_path)?);
+    log!(format!("Saving output to {output_path}"), result.save(output_path)?);
 
     Ok(())
 }

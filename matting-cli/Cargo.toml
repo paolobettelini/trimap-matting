@@ -9,5 +9,7 @@ edition = "2021"
 clap = { version = "4.0.29", features = ["derive"] }
 csscolorparser = "0.6.2"
 chrono = "0.4.23"
+log = "0.4.17"
+env_logger = "0.10.0"
 
 matting-lib = { path = "../matting-lib" }

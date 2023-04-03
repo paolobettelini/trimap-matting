@@ -14,3 +14,7 @@ matting-cli --target target.jpg --mask mask.png --output out.png --fill "#FFAAB2
 # Replace the background with another image
 matting-cli --target target.jpg --mask mask.png --output out.png --replace background.jpg
 ```
+
+## To install
+```bash
+sudo pacman -S libwebp clang qt5-base opencv

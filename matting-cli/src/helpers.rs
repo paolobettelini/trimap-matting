@@ -28,7 +28,7 @@ impl ConvertParseColorError for Result<Color, ParseColorError> {
 // Macro helpers
 
 /// Error macro
-macro_rules! error {
+macro_rules! msgerror {
     ($v:tt) => {
         MessageResult::Err($v.into())
     };
@@ -36,25 +36,23 @@ macro_rules! error {
 
 /// Log macro
 macro_rules! log {
-    ($v:expr, $log:expr, $body:expr) => {
-        if $log {
+    ($v:expr, $body:expr) => {
+        {
             use std::io::Write;
-
-            print!("{}... ", $v);
+    
+            info!("{}... ", $v);
             let _ = std::io::stdout().flush();
-
+    
             let start = std::time::Instant::now();
             let _res = $body;
             let elapsed = start.elapsed();
             
-            println!("Done! [{:?}]", elapsed);
+            info!("Done! [{:?}]", elapsed);
             
             _res
-        } else {
-            $body
         }
     };
 }
 
-pub(crate) use error;
+pub(crate) use msgerror;
 pub(crate) use log;

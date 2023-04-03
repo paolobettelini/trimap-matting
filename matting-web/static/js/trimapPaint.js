@@ -166,7 +166,7 @@ function fill(color, x, y) {
     let clickedColor = getPixelColor(imageData, x, y);
     let fillColor = hexToInt(color);
     let stack = [];
-    stack.push({x, y});
+    stack.push({x: x, y: y});
 
     if (clickedColor == fillColor) {
         // Avoid infinite loop

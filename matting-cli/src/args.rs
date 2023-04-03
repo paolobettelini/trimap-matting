@@ -1,4 +1,5 @@
 pub use clap::{ArgGroup, Parser};
+pub use log::{info, error, warn};
 use std::path::PathBuf;
 
 /// Matting CLI
@@ -12,7 +13,6 @@ use std::path::PathBuf;
 #[command(group(
     ArgGroup::new("action")
         .required(false)
-        //.requires("output")
         .args(["fill", "transparent", "replace"]),
 ))]
 pub struct Args {
@@ -30,7 +30,7 @@ pub struct Args {
 
     /// Save mask path
     #[arg(long)]
-    pub save_mask: Option<PathBuf>,
+    pub save_mask: Option<Option<PathBuf>>,
 
     /// Output image
     #[arg(short, long, requires = "action")]

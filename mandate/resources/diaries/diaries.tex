@@ -611,4 +611,285 @@ I also tried to disable the anti-aliasing but the smoothing is still there.
 The plan for the next working session is to make the server
 (optionally) use the CLI tool to compute matting operations.
 
+\subsection{2023-02-27}
+
+Work hours:\\
+\textbf{13:15 - 16:20}: No matting CLI feature
+
+Today I rewrote the matting backend so that the server calls the
+\texttt{matting} CLI program (such that core dumps don't affect
+the server). \\
+The old code (direct FFI) is still available as a feature (no\_matting\_cli),
+which is a conditional compilation condition. (E.g. \texttt{cargo build --features no\_matting\_cli}).
+
+However, the new implementation does not work yet. The CLI program
+outputs an error "No such file or directory".
+
+\pagebreak
+
+\subsection{2023-03-02}
+
+Work hours:\\
+\textbf{08:20 - 11:25}: No matting CLI feature
+
+Today I finally finished implementing the \texttt{no-matting-cli} feature.
+The backend server calls the CLI tool by default. I had some problems with the
+file handles and automatic temp file removal.
+Now the server does not crash anymore if the opencv library dumps a core.
+
+The plan for the next working session is to do error-handling. \\
+After the next working session the focus will be solely on the documentation.
+
+\subsection{2023-03-03}
+
+Work hours:\\
+\textbf{08:30 - 09:30}: Documentation \\
+\textbf{12:30 - 13:40}: Documentation
+
+Today I decided to postpone the error handling and continue the documentation.
+I created or modified the following sections
+\begin{itemize}
+    \item \texttt{Implementation.Core dump handling}
+    \item \texttt{Implementation.Subpixel rendering and antialiasing}
+    \item \texttt{Testing.Testing protocol}
+    \item \texttt{Testing.Tests result}
+\end{itemize}
+
+\subsection{2023-03-13}
+
+Work hours:\\
+\textbf{13:15 - 13:30}: Matting CLI \\
+\textbf{13:30 - 16:20}: Documentation
+
+Today I finished implementing the \texttt{matting-cli} features.
+Names, if the user specifies \texttt{--save-mask} without a filename
+it will generate one automatically using the timestamp.
+Previously, the user either specified the path or could not save the mask.
+I realized in a dream that it would probably work if I put
+\texttt{Option<Option<PathBuf>>} rather than \texttt{Option<PathBuf>} as a type.
+
+I then fixed the documentation accordingly and added more examples of the usage.
+
+In the remaining time I started writing the test protocol.
+
+I created or modified the following sections
+\begin{itemize}
+    \item \texttt{Tests.Testing protocol.CLI Tests}
+    \item \texttt{Tests.Testing protocol.Website Tests}
+    \item \texttt{CLI.Usage}
+    \item \texttt{CLI.Examples}
+\end{itemize}
+
+In the next working session I will continue
+the documentation.
+
+\pagebreak
+
+\subsection{2023-03-14}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: Matting CLI \\
+\textbf{10:00 - 10:20}: Helped a classmate \\
+\textbf{10:20 - 11:00}: Run tests \\
+\textbf{11:00 - 11:25}: Documentation
+
+Today I continued the documentation.
+I finished the \texttt{CLI Tests} section and continued the
+\texttt{Webiste Tests} one.
+I also run all the tests with success.
+
+The plan for the next working session is to finish the 
+\texttt{Website Tests} section.
+
+\subsection{2023-03-15}
+
+Work hours:\\
+\textbf{10:50 - 12:00}: Documentation \\
+\textbf{12:00 - 12:15}: Helped a classmate
+
+Today I continued the documentation. I finished writing the test
+protocol for the website.
+
+I created or modified the following sections
+\begin{itemize}
+    \item \texttt{Tests.Testing protocol.Website Tests}
+    \item \texttt{Tests.Tests results}
+\end{itemize}
+
+The plan for the next working session is to continue the documentation.
+
+\subsection{2023-03-16}
+
+Work hours:\\
+\textbf{08:20 - 09:20}: Fixed system \\
+\textbf{09:20 - 09:50}: WebP support \\
+\textbf{10:05 - 11:30}: Prepared laptop for the Swiss Skills event
+
+Today everything broke. My system broke, the local git repository broke
+and the program would not compile anymore. \\
+I updated the system, fixed the repository, updated some libraries
+in my code and recompiled everything a couple of times.
+
+I then implemented support for the WebP format.
+I modified the tests in the documentation accordingly.
+
+\pagebreak
+
+\subsection{2023-03-20}
+
+Work hours:\\
+\textbf{13:25 - 14:40}: Documentation \\
+\textbf{15:00 - 16:00}: Documentation \\
+\textbf{16:00 - 16:20}: CLI parameters.
+
+Today I continued the documentation. \\
+I added a requirement (default name for mask and output image).
+I matched every test in the documentation to their respective
+requirements and subrequirements.
+
+I also implemented the CLI arguments for the \texttt{matting-web}
+executable, which I'll document in the next working session.
+
+I created or modified the following sections:
+\begin{itemize}
+    \item \texttt{Tests}
+    \item \texttt{Requirements}
+    \item \texttt{Conclusion.Personal conclusions}
+    \item \texttt{Conclusion.Future development}
+    \item \texttt{Compilation and usage.Web application.Compilation}
+    \item \texttt{Compilation and usage.Web application.Usage}
+\end{itemize}
+
+\pagebreak
+
+\subsection{2023-03-21}
+
+Work hours:\\
+\textbf{08:25 - 11:20}: Documentation
+
+Today I continued the documentation.
+I fixed some typos and rearranged some sections a bit.
+
+I created or modified the following sections:
+\begin{itemize}
+    \item Structure
+    \item Technologies.OpenCV
+    \item Implementation.Dependencies
+\end{itemize}
+
+I also started drawing some flow charts for the documentation.
+
+\subsection{2023-03-22}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: Meeting with my advisor \\
+\textbf{11:35 - 12:12}: Fixing the log system
+
+Today I fixed the logging system in the CLI program.
+
+The plan for the next working session is to also fix it for the Web application
+and document everything logging-related.
+
+\subsection{2023-03-23}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: CLI logging documentation \\
+\textbf{10:05 - 10:40}: Helped a classmate \\
+\textbf{10:40 - 11:25}: WEB logging and documentation
+
+I created or modified the following sections:
+\begin{itemize}
+    \item Implementation.Logging.Enviromental variables
+    \item Implementation.Logging.matting-cli
+    \item Implementation.Logging.matting-web
+\end{itemize}
+
+\subsection{2023-03-24}
+
+Work hours:\\
+\textbf{08:20 - 09:50}: WEB logging and error handling \\
+\textbf{12:30 - 13:00}: WEB logging and error handling \\
+\textbf{13:00 - 13:53}: Refactor
+
+Today I implemented the logging system on the matting-web program.
+I also handled almost every possible error with the respective logs and HTTP responses.
+The program can log to a file instead of the standard output.
+I also did a huge refactor: formatting, code/file separation and simplified some code.
+Everything is much cleaner and more reaable.
+
+The plan for the next working session is to continue the documentation.
+
+\subsection{2023-03-27}
+
+Work hours:\\
+\textbf{13:15 - 16:20}: Documentation
+
+Today I continued the documentation.
+I changed the style of the test cases (include colors of the logs)
+and added two test cases. I also added a requirement (logging)
+and modified the usage section.
+
+I created or modified the following sections:
+\begin{itemize}
+    \item Requirements
+    \item Compilation and usage.CLI.Usage
+    \item Compilation and usage.Web application.Usage
+    \item Tests.Testing protocol
+\end{itemize}
+
+\subsection{2023-03-28}
+
+Work hours:\\
+\textbf{08:30 - 11:20}: Swim lane
+
+Today I spent the whole time drawing swim lane diagrams. \\
+There are still a couple of things I need to figure out. \\
+I will hopefully start drawing them digitally in the next
+working session.
+
+\subsection{2023-03-29}
+
+Work hours:\\
+\textbf{10:50 - 11:10}: Meeting with my advisor \\
+\textbf{08:30 - 11:20}: Swim lane
+
+Today I started drawing the swim lane diagrams in a digital format. \\
+I will keep doing so in the next working session.
+I will also create the handled errors table in the documentation.
+
+\subsection{2023-03-30}
+
+Work hours:\\
+\textbf{08:20 - 11:00}: Swim lane \\
+\textbf{11:20 - 11:20}: Helped a classmate
+
+Today I digitally drew the swim lane diagrams.
+I had some problems with the drawing program.
+The diagrams are done and I just need to format them
+into the documentation with errors table.
+
+\subsection{2023-03-31}
+
+Work hours:\\
+\textbf{08:20 - 10:30}: Swim lane and error tables \\
+\textbf{10:30 - 11:20}: Helped a classmate \\
+\textbf{12:30 - 13:20}: Abstract and assets \\
+\textbf{13:20 - 13:44}: Helped a classmate 
+
+Today I added the swimlane diagrams to the documentation.
+Each diagrams has a list of possible errors associated
+with the tasks.
+
+I created a folder for the asset images and the
+document containing the abstract.
+
+I created or modified the following sections:
+\begin{itemize}
+    \item \texttt{Structure.assets}
+    \item \texttt{Implementation.Flux Diagrams and Error handling}
+\end{itemize}
+
+The plan for the next working session is to add
+the Gantt charts.
+
 \end{document}

@@ -10,5 +10,14 @@ warp = "0.3.3"
 futures = "0.3.25"
 tokio = { version = "1", features = ["full"] }
 csscolorparser = "0.6.2"
+clap = { version = "4.0.29", features = ["derive"] }
+lazy_static = "1.4.0"
+tempfile = "3.4.0"
+log = "0.4.17"
+env_logger = "0.10.0"
+chrono = "0.4.24"
 
 matting-lib = { path = "../matting-lib" }
+
+[features]
+no_matting_cli = []
