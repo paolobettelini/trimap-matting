@@ -1074,7 +1074,8 @@ options is selected, the other inputs are disabled.
 
 \subsection{Dependencies}
 
-Here's a list of all the libraries used within the project
+The following is a list of all the libraries used within the project
+crates.
 
 \bgroup{}
 \def\arraystretch{1.5}
@@ -1108,6 +1109,10 @@ Here's a list of all the libraries used within the project
         \hline
         chrono & Timestamps & 0.4.23 & \- \\
         \hline
+        log & Logger library & 0.4.17 & \- \\
+        \hline
+        env\_logger & Logger implementation & 0.10.0 & \- \\
+        \hline
         matting-lib & Matting library & (local) & \- \\
         \hline
     \end{tabular}
@@ -1136,6 +1141,12 @@ Here's a list of all the libraries used within the project
         lazy\_static & Lazily evaluated statics & 1.4.0 & \- \\
         \hline
         tempfile & Temporary files & 3.4.0 & \- \\
+        \hline
+        log & Logger library & 0.4.17 & \- \\
+        \hline
+        env\_logger & Logger implementation & 0.10.0 & \- \\
+        \hline
+        chrono & Timestamps & 0.4.24 & \- \\
         \hline
         matting-lib & Matting library & (local) & \- \\
         \hline
@@ -1258,19 +1269,28 @@ The numbered labels (\#) represent the possible errors at the given stage.
 \subsection{mandate}
 
 The \texttt{mandate} folder contains all the documents regarding
-the project (documentation, abstract and diaries).
+the project (documentation, abstract and diaries),
+along with their source code and compilation scripts.
 
 \subsection{matting-lib}
 
-The \texttt{matting-lib} folder.
+The \texttt{matting-lib} folder contains the Rust crate
+which is used by the \texttt{matting-cli}
+and \texttt{matting-web} programs.
+The library contains bindings to the OpenCV matting module
+and the code to perform the various operations on the background
+of an image.
 
 \subsection{matting-cli}
 
-The \texttt{matting-cli} folder.
+The \texttt{matting-cli} folder contains the Rust
+source code of the command-line interface.
 
 \subsection{matting-web}
 
-The \texttt{matting-web} folder.
+The \texttt{matting-web} folder contains the Rust
+source code of the graphical web interface,
+along with the static frontend source code.
 
 \subsection{assets}
 
