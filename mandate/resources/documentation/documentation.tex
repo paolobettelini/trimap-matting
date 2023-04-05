@@ -35,14 +35,118 @@
 \newglossaryentry{FFI}
 {
     name=FFI,
-    description={Foreign Function Interface}
+    description={Foreign Function Interface.
+    A mechanism that enables different programming
+    languages to communicate and share data}
+}
+
+\newglossaryentry{CLI}
+{
+    name=CLI,
+    description={Command Line interface.
+    A way of interacting with a computer program
+    through text-based commands}
+}
+
+\newglossaryentry{GUI}
+{
+    name=GUI,
+    description={Graphical User Interface.
+    A type of user interface that allows users to interact
+    with a computer program using graphical elements}
 }
 
 \newglossaryentry{trait}
 {
     name=trait,
-    description={A trait in Rust defined shared behavior among structures}
+    description={A trait in Rust defines shared behavior among structures}
 }
+
+\newglossaryentry{trimap}
+{
+    name=trimap,
+    description={A type of image segmentation (mask) where an image
+    is divided into three regions: foreground, background, and unknown}
+}
+
+\newglossaryentry{matte}
+{
+    name=matte,
+    description={A layer or mask that blocks out part of an image to
+    create special effects or to combine multiple images}
+}
+
+\newglossaryentry{matting}
+{
+    name=matting,
+    description={Process of separating the foreground
+    and background of an image or video}
+}
+
+\newglossaryentry{cargo}
+{
+    name=cargo,
+    description={Package manager for the Rust programming language}
+}
+
+\newglossaryentry{JPG}
+{
+    name=JPG,
+    description={Joint Photographic Experts Group. An image format
+    with lossy compression}
+}
+
+\newglossaryentry{PNG}
+{
+    name=PNG,
+    description={Portable Network Graphics. An image format
+    with lossless compression and transparency}
+}
+
+\newglossaryentry{WebP}
+{
+    name=WebP,
+    description={Web Picture format.
+    A modern image format that provides superior
+    lossless and lossy compression for images on the web}
+}
+
+\newglossaryentry{Rust}
+{
+    name=Rust,
+    description={A systems programming language
+    designed for speed, safety, and concurrency,
+    which is known for its memory safety and thread safety features}
+}
+
+\newglossaryentry{C}
+{
+    name=C,
+    description={A general-purpose computer programming language}
+}
+
+\newglossaryentry{C++}
+{
+    name=C++,
+    description={An object-oriented programming language derived from C}
+}
+
+\newglossaryentry{CSS}
+{
+    name=CSS,
+    description={Cascading Style Sheets.
+    a stylesheet language used to describe the look
+    and formatting of HTML documents}
+}
+
+\newglossaryentry{segfault}
+{
+    name=segfault,
+    description={An error in computer programming that
+    occurs when a program attempts to access a memory
+    location that it is not allowed to access}
+}
+
 
 \begin{document}
 
@@ -61,7 +165,7 @@
 Background removal has been a longstanding practice in digital image processing.
 While removing the background from images with simple borders is relatively straightforward,
 more complex borders, such as hair, require the use of more sophisticated techniques.
-Trimap matting is a novel and effective approach to solving the latter.
+\Gls{trimap} \gls{matting} is a novel and effective approach to solving the latter.
 This project involves the development of a user-friendly command-line and web graphical user interface
 to make use of this algorithm.
 
@@ -96,13 +200,13 @@ All the source code and documents can be found at
 
 \section{Requirements}
 
-\requirement{00}{CLI tool}{1}{1.1}{none}{
-    A CLI tool to execute background removal must be developed.
+\requirement{00}{\gls{CLI} tool}{1}{1.1}{none}{
+    A \gls{CLI} tool to execute background removal must be developed.
 }{
     \subreq{00}{0}{The target image must be specified.}
-    \subreq{00}{1}{The trimap image can be specified.}
+    \subreq{00}{1}{The \gls{trimap} image can be specified.}
     \subreq{00}{2}{The soft mask can be specified.}
-    \subreq{00}{3}{Either the soft mask or the trimap must be specified.}
+    \subreq{00}{3}{Either the soft mask or the \gls{trimap} must be specified.}
     \subreq{00}{4}{The program can save the generated background mask.}
     \subreq{00}{5}{The program can remove the background and replace it with an image.}
     \subreq{00}{6}{The program can remove the background and fill it with a color.}
@@ -112,13 +216,13 @@ All the source code and documents can be found at
 \requirement{01}{Image formats}{1}{1.0}{none}{
     Multiple image formats must be supported.
 }{
-    \subreq{00}{0}{The JPG format must be supported.}
-    \subreq{00}{1}{The PNG format must be supported.}
-    \subreq{00}{2}{The WebP format must be supported.}
+    \subreq{00}{0}{The \gls{JPG} format must be supported.}
+    \subreq{00}{1}{The \gls{PNG} format must be supported.}
+    \subreq{00}{2}{The \gls{WebP} format must be supported.}
 }
 
 \requirement{02}{Size check}{1}{1.0}{none}{
-    The executable must assert that the target image and trimap are of the same size.
+    The executable must assert that the target image and \gls{trimap} are of the same size.
 }{%
 }
 
@@ -143,10 +247,10 @@ All the source code and documents can be found at
 \section{Trimap Matting}
 \label{sec:trimat}
 
-Matting is a technique used to extract an object
+\Gls{matting} is a technique used to extract an object
 from an image.
-Trimap matting is a term used to refer to the process
-of generating alpha mattes\cite{matte} for an object
+\Gls{trimap} \gls{matting} is a term used to refer to the process
+of generating alpha \gls{matte}s\cite{matte} for an object
 % https://en.wikipedia.org/wiki/Matte_(filmmaking)
 in an image given an initial
 approximation of its borders.
@@ -167,7 +271,7 @@ Note that the multiplicative operator here is the scalar vector multiplication.
 This is because the pixels are represented by a vector of values,
 usually \({\mathbb{R}}^3\) or \({\mathbb{R}}^4\) (for transparent images).
 
-The trimap is an approximation of the alpha mattes.
+The \gls{trimap} is an approximation of the alpha mattes.
 The black dye represents background-only space, the white dye
 represents foreground-only space whilst the gray one
 delimits the distinction between the two.
@@ -240,16 +344,16 @@ and the alpha value for \(T_{x,y}\) is set to \(\alpha_{x,y}\).
 
 OpenCV\cite{opencv} is a library
 for computer vision. It contains a large
-amount of tools, from GUIs, video analysis, machine learning,
+amount of tools, from \gls{GUI}s, video analysis, machine learning,
 object detection, image processing and many more\cite{opencvdoc}.
 The library also contains a module about \textit{alpha matting},
-which contains a function to generate alpha mattes given a trimap
+which contains a function to generate alpha mattes given a \gls{trimap}
 \cite{opencvalphamatting}.
 
 \subsubsection{Trimap colors}
 
 As stated in the last section, the gray color represents the unknown pixels.
-The library, however, accepts a greyscale trimap.
+The library, however, accepts a greyscale \gls{trimap}.
 The question is whether different grays have different meanings.
 This is not documented and would require to read the original
 paper of implementation. \\ % cite
@@ -309,12 +413,12 @@ low or too high.
 
 \subsection{Rust}
 
-Rust\cite{rust} is a generic compiled programming language.
+\gls{Rust}\cite{rust} is a generic compiled programming language.
 The code is compiled using LLVM to machine code and its speed
-is comparable to C and C++.
+is comparable to \gls{C} and \gls{C++}.
 Rust is the first programming language to guarantee memory safety;
 memory is not manually freed nor garbage collected.
-It is not possible to dereference a null pointer, cause memory segfaults, core dumps
+It is not possible to dereference a null pointer, cause memory \gls{segfault}s, core dumps
 and memory leaks.
 Code that could cause undefined behavior can still be written,
 but it is strictly bounded in blocks where the compiler is relaxed.
@@ -339,7 +443,7 @@ A \textit{module} is a logical section of a program or library.
 
 \subsubsection{Compilation}
 
-The executable can be compiled using the \texttt{cargo}
+The executable can be compiled using the \texttt{\gls{cargo}}
 package manager.
 
 \begin{lstlisting}[style=boxed]
@@ -392,8 +496,8 @@ The \texttt{--target} parameter specifies the image
 on which the operation needs to be applied.
 This parameter is \underline{mandatory}.
 
-The \texttt{--trimap} parameter specifies the trimap
-image which will be used to generate the alpha mattes.
+The \texttt{--trimap} parameter specifies the \gls{trimap}
+image which will be used to generate the alpha \gls{matte}s.
 
 The \texttt{--mask} parameter specifies the image
 containing the alpha mattes to use.
@@ -409,7 +513,7 @@ The alpha mattes image can be saved on the file system
 by specifying the \texttt{--save-mask} parameter.
 
 The parameter \texttt{--save-mask} can either specify a filename
-for the mask. If left blank, the program will generate a name (PNG format)
+for the mask. If left blank, the program will generate a name (\gls{PNG} format)
 using the timestamp.
 
 There are 3 different operations that can be applied
@@ -422,7 +526,7 @@ If the \texttt{--output} parameter is not specified then it will produce
 a file name with the current timestamp.
 
 \textbf{Note:} the argument of \texttt{--color} can be any valid
-CSS color. See \cite{csscolors} for the documentation.
+\gls{CSS} color. See \cite{csscolors} for the documentation.
 
 The \texttt{--verbose} flag is optional and will print additional
 information about what the program is doing and the elapsed
@@ -430,15 +534,15 @@ time of each operation. Se the logging section for more information.
 
 \subsubsection{Examples}
 
-The following command generates a mask of the alpha mattes
-given a trimap and saves it to \texttt{mask.png}.
+The following command generates a mask of the alpha \gls{matte}s
+given a \gls{trimap} and saves it to \texttt{mask.png}.
 \begin{lstlisting}[style=boxed]
     $ matting-cli -i target.jpg --trimap trimap.png
         --save-mask mask.png
 \end{lstlisting}
 
 The following command generates a mask of the alpha mattes
-given a trimap and saves it to a file (e.g. \texttt{mask\_20230313-133117.png}).
+given a \gls{trimap} and saves it to a file (e.g. \texttt{mask\_20230313-133117.png}).
 \begin{lstlisting}[style=boxed]
     $ matting-cli -i target.jpg --trimap trimap.png
         --save-mask
@@ -474,7 +578,7 @@ given its mask and leaves it transparent. The output is saved to a file
 \end{lstlisting}
 
 The following shows the output of the program when the \texttt{--verbose}
-flag is set. This command computes the alpha mattes given a trimap,
+flag is set. This command computes the alpha mattes given a \gls{trimap},
 then it saves the generated mask, fills the background of the image
 with the color red, and then saves the result.
 \begin{lstlisting}[style=boxed]
@@ -644,12 +748,12 @@ or a colored image.
 
 \subsection{OpenCV Binding}
 
-The OpenCV library is primarily written in C++.
-In order to access its functions in Rust, I used a crate
+The OpenCV library is primarily written in \gls{C++}.
+In order to access its functions in \gls{Rust}, I used a crate
 called \texttt{opencv}\cite{rustopencv}, which is a binding
 to the \gls{FFI} of opencv.
 
-It does not fully implement the Rust idioms and best practices,
+It does not fully implement the \gls{Rust} idioms and best practices,
 I found it very easy to accidentally cause a core dump
 whilst calling a function.
 
@@ -674,8 +778,8 @@ and it contains the following function which computes alpha mattes of an object 
     \item \textbf{result:} Output alpha matte image
 \end{itemize}
 
-The function intoFlow performs alpha matting on a RGB image
-using a greyscale trimap image, and outputs a greyscale alpha matte image. \\
+The \texttt{intoFlow} function performs alpha \gls{matting} on a RGB image
+using a greyscale \gls{trimap} image, and outputs a greyscale alpha matte image. \\
 The output alpha matte can be used to softly extract the foreground
 object from a background image. % cite
 
@@ -686,7 +790,7 @@ are implemented by the \texttt{Mat} type.
 
 \subsection{Core dump handling}
 
-The opencv matting module will crash if the parameters
+The OpenCV \gls{matting} module will crash if the parameters
 are incorrect. For instance, the image parameters are represents by a
 \texttt{Mat} structure, and if the mats are of different sizes or have different color depth,
 the library may try to access a mat as if it was bigger, causing a memory segmentation
@@ -694,7 +798,7 @@ and a core dump.
 
 These incidents can be prevented by checking the size of the image and ensuring the correct
 color depth before calling the library, however, some incidents are harder
-to predict; if the trimap is only white (foreground) or only black (background),
+to predict; if the \gls{trimap} is only white (foreground) or only black (background),
 then the library will cause a core dump. \\
 It is also possible to prevent these crashes by checking every single pixel
 of the canvas, however, I decided not do so because it is practically impossible
@@ -702,14 +806,14 @@ to prevent every (obscure) core dump. There may be more strange core dumps
 that I have not encountered.
 
 In order to fix this issue and prevent the server from abruptly stopping,
-the trimap matting operations are implemented by calling the \texttt{matting-cli}
+the \gls{trimap} \gls{matting} operations are implemented by calling the \texttt{matting-cli}
 tool. This will start a secondary process. If the secondary process crashes,
 the server mustn't be impacted. The images are passed to the other software using
 temporary file in the \texttt{/tmp} directory (automatic cleanup
-is ensured by the Rust memory safety model).
+is ensured by the \gls{Rust} memory safety model).
 
 Although it works, this solution is not how I would have wished to have implemented
-the functionality. For this reason, I also implemented the direct FFI call. \\
+the functionality. For this reason, I also implemented the direct \gls{FFI} call. \\
 By compiling with the feature \textit{no\_matting\_cli}, e.g.
 \begin{lstlisting}[style=Rust, style=boxed]
     cargo build --release --features no_matting_cli
@@ -741,10 +845,10 @@ a \texttt{multipart/form-data} attribute.
 
 \subsection{Matting library}
 
-The core of this project is certainly the alpha matting algorithm.
-In order to develop both a CLI and a GUI tool to
+The core of this project is certainly the alpha \gls{matting} algorithm.
+In order to develop both a \gls{CLI} and a \gls{GUI} tool to
 use this algorithm, I created a separate library (\texttt{matting-lib})
-containing all the matting and image processing related functions.
+containing all the \gls{matting} and image processing related functions.
 
 The library exports the following functions, modules and structures
 
@@ -823,7 +927,7 @@ The website implements a set of features:
 \begin{enumerate}
     \item If a transformation is applied whilst the mask is loading,
     the site will wait until the mask is ready.
-    \item The trimap panting tool aren't enabled until an image is uploaded.
+    \item The \gls{trimap} panting tool aren't enabled until an image is uploaded.
     \item The mask download button and the transformation
     selector aren't enabled until a mask has been generated or uploaded.
     \item The header dropdown is responsive and needs to be toggled when the page
@@ -907,19 +1011,19 @@ The flood fill algorithm is a simple implementation with a stack data structure.
 
 \subsubsection{Subpixel rendering and antialiasing}
 
-The trimap drawing, due to its purpose, shall not have antialiasing
+The \gls{trimap} drawing, due to its purpose, shall not have antialiasing
 and subpixel rendering. These features will create a smooth grayscale border,
-inserting some pixels in the wrong category of the trimap. \\
+inserting some pixels in the wrong category of the \gls{trimap}. \\
 
 I was not able to fully remove those features, however, some of the following
-procedures may still enhance performance and quality of the trimap.
+procedures may still enhance performance and quality of the \gls{trimap}.
 
 {\color{gray}Trimap CTX}
 \begin{lstlisting}[style=JS, style=boxed]
     ctx.imageSmoothingEnabled = false
 \end{lstlisting}
 
-Trimap canvas CSS properties
+\Gls{trimap} canvas \gls{CSS} properties
 \begin{lstlisting}[style=JS, style=boxed]
     #trimap {
         image-rendering: pixelated;
@@ -945,10 +1049,10 @@ made the undo feature can get slow, but it is not usually a problem.
 The following image illustrates the initial stage of the
 website (\textsc{STEP 0}),
 which focuses on explaining the steps required to generate an
-alpha matte mask and replace the background of a given image.
+alpha \gls{matte} mask and replace the background of a given image.
 As depicted, the first section of the website provides a detailed
 explanation of how the site operates,
-outlining the steps in order to generate an alpha matte
+outlining the steps in order to generate an alpha \gls{matte}
 mask and replace the background of an image.
 
 \begin{figure}[ht]
@@ -967,7 +1071,7 @@ before having selected the image,
 the inputs are disabled.
 When an image is uploaded (\ref{fig:fig1b}),
 the painting tools become available
-in order to draw the trimap mask.
+in order to draw the \gls{trimap} mask.
 
 \begin{figure}[h]
     \centering
@@ -986,7 +1090,7 @@ in order to draw the trimap mask.
 
 The following images show the second section
 of the website \textsc{STEP 2}.
-In this section the current alpha matte mask
+In this section the current alpha \gls{matte} mask
 is displayed. The mask can be generated by pressing
 the respective button in the \textsc{STEP 1}
 section. Alternatively, the user is able to
@@ -1014,7 +1118,7 @@ The following images show the third section
 of the website \textsc{STEP 3}.
 In this section the user is able to select
 a transformation to apply on the background,
-which will be applied using the alpha matte mask
+which will be applied using the alpha \gls{matte} mask
 previosuly generated. \\
 The first image (\ref{fig:fig3a}) shows the transformation
 section when a mask is not yet available
@@ -1221,7 +1325,7 @@ The following diagram shows the flux of the \texttt{matting-cli} executable.
 The numbered labels (\#) represent the possible errors at the given stage.
 
 \begin{itemize}
-    \item[\#1] Wrong CLI parameters or invalid combination.
+    \item[\#1] Wrong \gls{CLI} parameters or invalid combination.
     \item[\#2] (\texttt{OpenCV}) The image file is corrupt or could not be read.
         The file may not exist or the executable may not have the required
         permission.
@@ -1274,10 +1378,10 @@ along with their source code and compilation scripts.
 
 \subsection{matting-lib}
 
-The \texttt{matting-lib} folder contains the Rust crate
+The \texttt{matting-lib} folder contains the \gls{Rust} crate
 which is used by the \texttt{matting-cli}
 and \texttt{matting-web} programs.
-The library contains bindings to the OpenCV matting module
+The library contains bindings to the OpenCV \gls{matting} module
 and the code to perform the various operations on the background
 of an image.
 
@@ -1320,7 +1424,7 @@ Tests must be executed in order.
     \item The user from which the tests will be executed must have permission to execute
     the program.
     \item A valid \texttt{target} image (\texttt{target.jpg}).
-    \item A valid \texttt{trimap} image with the same size of the target image (\texttt{trimap.png}).
+    \item A valid \texttt{\gls{trimap}} image with the same size of the target image (\texttt{trimap.png}).
     \item A valid \texttt{background} image with the same size of the target image (\texttt{background.jpg}).
     \item The user must have the permission to read each resource used and write files
     to the specified locations.
@@ -1555,11 +1659,11 @@ The output written to the \textsc{stdout} must be empty and a file
 }{%
 \makecell[tl]{
     Each information line must specificy the respective image format. \\
-    (e.g. \texttt{.jpg} \(\rightarrow\) \textsc{JPG})
+    (e.g. \texttt{.jpg} \(\rightarrow\) \textsc{\gls{JPG}})
 }
 }
 
-\test{09}{Transparency and JPG format}{None}{
+\test{09}{Transparency and \gls{JPG} format}{None}{
     \item 
     \makecell[tl]{
         Execute the following command: \\
@@ -1571,7 +1675,7 @@ The output written to the \textsc{stdout} must be empty and a file
     \item Open \texttt{res.jpg} with an image viewer.
 }{%
 \makecell[tl]{
-    A message to the \textsc{STDOUT} must warn about the usage of the JPG format \\
+    A message to the \textsc{STDOUT} must warn about the usage of the \gls{JPG} format \\
     with transparency. The image must have a black background behind the\\
     subject. \\
     \begin{lstlisting}[style=mattingcli]^^J
@@ -1632,7 +1736,7 @@ The mask must have been saved in the current directory with the name \texttt{tar
     }
 }{%
 \makecell[tl]{
-    Each of the matting commands must print en error indicating that the sizes \\
+    Each of the \gls{matting} commands must print en error indicating that the sizes \\
     of the images are not the same. \\
     \begin{lstlisting}[style=mattingcli]^^J
         [<time> ERROR matting_cli] An error occured: The mask and target image must be of the same size.^^J
@@ -1661,7 +1765,7 @@ Tests must be executed in order.
     \item The user from which the tests will be executed must have permission to execute
     the program.
     \item A valid \texttt{target} image (\texttt{target.jpg}).
-    \item A valid \texttt{trimap} image with the same size of the target image (\texttt{trimap.png}).
+    \item A valid \texttt{\gls{trimap}} image with the same size of the target image (\texttt{trimap.png}).
     \item A valid \texttt{background} image with the same size of the target image (\texttt{background.jpg}).
     \item A running server instance of the web application.
     \item The server must have the permission to read each resource used and write files
@@ -1671,13 +1775,13 @@ Tests must be executed in order.
 
 \paragraph{Tests:}
 
-\test{13}{Trimap mask generation}{Req-03}{
+\test{13}{\Gls{trimap} mask generation}{Req-03}{
     \item Upload the target image to the website
-    \item Draw the trimap with the given tools
+    \item Draw the \gls{trimap} with the given tools
     \item Press the generate mask button
 }{%
     A loading animation must appear on the website.
-    After some time the corresponding alpha matte mask must appear, replacing the loading animation.
+    After some time the corresponding alpha \gls{matte} mask must appear, replacing the loading animation.
 }
 
 \test{14}{Save mask feature}{Req-03}{
@@ -1692,7 +1796,7 @@ Tests must be executed in order.
     \item Click the apply transformation button 
 }{%
 A loading animation must appear on the website.
-After some time the corresponding alpha matte mask must appear, replacing the loading animation.
+After some time the corresponding alpha \gls{matte} mask must appear, replacing the loading animation.
 The result must be the target image with a transparent background.
 }
 
@@ -1702,7 +1806,7 @@ The result must be the target image with a transparent background.
     \item Click the apply transformation button 
 }{%
 A loading animation must appear on the website.
-After some time the corresponding alpha matte mask must appear, replacing the loading animation.
+After some time the corresponding alpha \gls{matte} mask must appear, replacing the loading animation.
 The result must be the target image with the selected color as a background.
 }
 
@@ -1712,7 +1816,7 @@ The result must be the target image with the selected color as a background.
     \item Click the apply transformation button 
 }{%
 A loading animation must appear on the website.
-After some time the corresponding alpha matte mask must appear, replacing the loading animation.
+After some time the corresponding alpha \gls{matte} mask must appear, replacing the loading animation.
 The result must be the target image with the selected image as a background.
 }
 
@@ -1732,7 +1836,7 @@ The result must be the target image with the selected image as a background.
 }
 
 \test{20}{Core dump}{Req-03}{
-    \item Draw the trimap such that it all black
+    \item Draw the \gls{trimap} such that it all black
     \item Press the generate mask button
 }{%
     The server must not crash and keep running
@@ -1870,11 +1974,11 @@ and improvements that could be made.
     \item \textbf{Better website}: The website design could be improved. It is not
     fully responsive and it certainly could have a better design overall.
     \item \textbf{Trimap upload}: It could be useful if the user was able to
-    directly upload a trimap for a given image, rather than having to always draw it.
+    directly upload a \gls{trimap} for a given image, rather than having to always draw it.
     \item \textbf{Automatic cropping}: When a user upload an image replacement for the background.
     It would be useful if it could be cropped to the correct size directly within the website.
-    \item \textbf{Website format handling}: Unlike the CLI version, the web application does
-    not handle different formats. Everything is converted into a PNG and saved as one.
+    \item \textbf{Website format handling}: Unlike the \gls{CLI} version, the web application does
+    not handle different formats. Everything is converted into a \gls{PNG} and saved as one.
     The user has to manually convert the resulting image into another format.
     \item \textbf{Optimized undo}: The undo feature gets slow as more
     flood fills are made.
