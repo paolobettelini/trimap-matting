@@ -9,6 +9,8 @@
 \usepackage{algorithm}
 \usepackage{makecell}
 \usepackage{fvextra}
+
+
 \usepackage{adjustbox}
 
 \usepackage{lpi}
@@ -185,7 +187,7 @@ Here are some examples using an image of a plant.
 Once the alpha mattes are generated (soft mask) we can use them
 to extract the object from the target image.
 Thus, we can remove the background behind the object,
-fill the background with a color, replace it with another image
+fill the background with a color, replace it with another image,
 or leave it transparent.
 
 Given a target image with pixels \(T_{x,y}\), the alpha
@@ -196,7 +198,7 @@ as follows
     T_{x,y}' = 
     \alpha_{x,y} \cdot T_{x,y} + (1 - \alpha_{x,y}) \cdot R_{x,y}
 \]
-If we want to replace the background with a color we can consider.
+If we want to replace the background with a color, we can consider.
 \(R={(r,g,b)}^t\) \\
 If we just want to leave the background transparent, meaning
 \(T' \in {\mathbb{R}}^4\), we have
@@ -208,22 +210,24 @@ and the alpha value for \(T_{x,y}\) is set to \(\alpha_{x,y}\).
 
 \begin{figure}[h]
     \begin{minipage}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{result3.png}
+        \includegraphics[width=\textwidth]{results/result3.png}
         \caption{Transparency}
     \end{minipage}
     \begin{minipage}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{result2.png}
+        \includegraphics[width=\textwidth]{results/result2.png}
         \caption{Color fill}
     \end{minipage}
     \begin{minipage}{0.33\textwidth}
-        \includegraphics[width=\textwidth]{result1.png}
+        \includegraphics[width=\textwidth]{results/result1.png}
         \caption{Replacement}
     \end{minipage}
 \end{figure}
 
 \pagebreak
 
-\section{OpenCV}
+\section{Technologies}
+
+\subsection{OpenCV}
 
 \begin{wrapfigure}{r}{4cm}
     \includegraphics[width=4cm]{opencvlogo.png}
@@ -237,14 +241,14 @@ The library also contains a module about \textit{alpha matting},
 which contains a function to generate alpha mattes given a trimap
 \cite{opencvalphamatting}.
 
-\subsection{Trimap colors}
+\subsubsection{Trimap colors}
 
 As stated in the last section, the gray color represents the unknown pixels.
-The library however, accepts a greyscale trimap.
-The question is wheter different grays have different meanings.
+The library, however, accepts a greyscale trimap.
+The question is whether different grays have different meanings.
 This is not documented and would require to read the original
 paper of implementation. \\ % cite
-In order to find out here are a bunch of samples with different gray
+In order to find out, here are a bunch of samples with different gray
 colors:
 
 \wrapfill
@@ -298,6 +302,31 @@ low or too high.
 
 \pagebreak
 
+\subsection{Rust}
+
+Rust\cite{rust} is a generic compiled programming language.
+The code is compiled using LLVM to machine code and its speed
+is comparable to C and C++.
+Rust is the first programming language to guarantee memory safety;
+memory is not manually freed nor garbage collected.
+It is not possible to dereference a null pointer, cause memory segfaults, core dumps
+and memory leaks.
+Code that could cause undefined behavior can still be written,
+but it is strictly bounded in blocks where the compiler is relaxed.
+This relaxation implies that the language is also low-level.
+Another key feature to the performance of Rust is zero cost abstraction,
+which means that generic types and function abstractions are resolved at compile-time.
+Conditional compilation and compile-time computations are also extensively used.
+\\
+There are also many features concerning the programming experience, such as
+advanced metaprogramming and code generation using macros, intelligent compiler,
+dependency system (Cargo), modern syntax and many tools to ease development.
+
+\textbf{\color{red} Note}: a Rust \textit{crate} refers to a library.
+A \textit{feature} is an optional component of library.
+A \textit{module} is a logical section of a program or library.
+
+\pagebreak
 
 \section{Compilation and usage}
 
@@ -315,10 +344,10 @@ package manager.
 
 This will generate an executable (\texttt{matting-cli})
 in \texttt{./target/release}.
-In order to make this executable globally available
-you can move it into a folder in the \textsc{\$PATH} enviroment
+In order to make this executable globally available,
+you can move it into a folder in the \textsc{\$PATH} environment
 variable, such as \texttt{/usr/bin}.
-Ye may also modify the executable file name to change its invokation
+Ye may also modify the executable file name to change its invocation
 name.
 
 \begin{lstlisting}[style=boxed]
@@ -365,7 +394,7 @@ The \texttt{--mask} parameter specifies the image
 containing the alpha mattes to use.
 
 The parameter \texttt{--trimap} and \texttt{--mask}
-are mutually exclusive and one of them is \underline{mandatory}.
+are mutually exclusive, and one of them is \underline{mandatory}.
 
 The advantage of using \texttt{--mask} over
 \texttt{--trimap} is that the alpha mattes are
@@ -374,18 +403,18 @@ This can save lots of computational times.
 The alpha mattes image can be saved on the file system
 by specifying the \texttt{--save-mask} parameter.
 
-The parameter \texttt{--save-mask} can either specifiy a filename
-for the mask. If left blank the program will generate a name (PNG format)
+The parameter \texttt{--save-mask} can either specify a filename
+for the mask. If left blank, the program will generate a name (PNG format)
 using the timestamp.
 
 There are 3 different operations that can be applied
 to the background of the result: \texttt{--transparent},
 \texttt{--replace} or \texttt{--fill}.
-These operations are mutually exclusive and if one is specified,
+These operations are mutually exclusive, and if one is specified,
 the \texttt{--output} parameter can be set to
 specify the path where the resulting image will be saved.
 If the \texttt{--output} parameter is not specified then it will produce
-a file name with the current timestmap.
+a file name with the current timestamp.
 
 \textbf{Note:} the argument of \texttt{--color} can be any valid
 CSS color. See \cite{csscolors} for the documentation.
@@ -432,7 +461,7 @@ given its mask and replaces it with the image \texttt{background.png}.
 \end{lstlisting}
 
 The following command removes the background of an image
-given its mask and and leaves it transparent. The output is saved to a file
+given its mask and leaves it transparent. The output is saved to a file
 (e.g. \texttt{target\_20230313-134153.png}).
 \begin{lstlisting}[style=boxed]
     $ matting-cli -i target.jpg --mask mask.png
@@ -442,7 +471,7 @@ given its mask and and leaves it transparent. The output is saved to a file
 The following shows the output of the program when the \texttt{--verbose}
 flag is set. This command computes the alpha mattes given a trimap,
 then it saves the generated mask, fills the background of the image
-with the color red and then saves the result.
+with the color red, and then saves the result.
 \begin{lstlisting}[style=boxed]
     $ matting-cli -i target.jpg --trimap trimap.png
         --save-mask mask.png -o out.png --fill red --verbose
@@ -472,10 +501,10 @@ package manager.
 
 This will generate an executable (\texttt{matting-web})
 in \texttt{./target/release}.
-In order to make this executable globally available
-you can move it into a folder in the \textsc{\$PATH} enviroment
+In order to make this executable globally available,
+you can move it into a folder in the \textsc{\$PATH} environment
 variable, such as \texttt{/usr/bin}.
-You may also modify the executable file name to change its invokation
+You may also modify the executable file name to change its invocation
 name.
 
 \begin{lstlisting}[style=boxed]
@@ -537,21 +566,21 @@ The following command starts the server and logs everything to a file.
     $ matting-web -w /path/to/wwww -l logfile.log
 \end{lstlisting}
 
-% Weird ancient length stuff
+% Ancient length stuff
 \newlength{\mtL}
 
-% FOR A4
+% for A4
 \setlength{\mtL}{.8\paperheight}% the next hsize
 % FOR A3
-%\setlength{\mtL}{1.7\paperwidth}
+%\setlength{\mtL}{1.4\paperheight}
 
 \addtolength\mtL{-\headwidth}
 \newpage
 \addtolength\headwidth{\mtL}
 
-% Flip page
+% Flip Page
 
-% FOR A3
+% for A3
 %\pdfpagewidth=2\paperwidth
 % FOR A4
 \pdfpageheight=\paperwidth
@@ -559,22 +588,27 @@ The following command starts the server and logs everything to a file.
 \paperwidth=\pdfpagewidth
 \paperheight=\pdfpageheight
 
-% Text width and text height
+% Text width and height
 \begingroup
-\vsize=.8\pdfpageheight % do what you like
-\hsize=.8\pdfpagewidth  % do what you like
+\vsize=1.125\pdfpageheight % set whatever you like
+\hsize=1.125\pdfpageheight
 \textwidth=\hsize
-\textheight=\vsize
+\textwidth=\vsize
 
 % -- CONTENT --
 
 \section{Planning}
 
-\subsection{Initial Gantt chart}
+\subsection{Initial Gantt Chart}
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{media/gantt1.jpg}
+    \includegraphics[width=\textwidth]{gantt/gantt1.jpg}
+    \caption{Initial Gantt Chart}
 \end{figure}
+
+\newpage
+
+\subsection{Final Gantt Chart}
 
 % -- CONTENT --
 
@@ -610,7 +644,7 @@ In order to access its functions in Rust, I used a crate
 called \texttt{opencv}\cite{rustopencv}, which is a binding
 to the \gls{FFI} of opencv.
 
-It does not fully implement the Rust idioms and best pratices,
+It does not fully implement the Rust idioms and best practices,
 I found it very easy to accidentally cause a core dump
 whilst calling a function.
 
@@ -654,23 +688,23 @@ the library may try to access a mat as if it was bigger, causing a memory segmen
 and a core dump.
 
 These incidents can be prevented by checking the size of the image and ensuring the correct
-color depth before calling the library, however, some incidents are more hard
+color depth before calling the library, however, some incidents are harder
 to predict; if the trimap is only white (foreground) or only black (background),
 then the library will cause a core dump. \\
-It is possible to also prevent these crashes by checking every single pixel
-of the canvas, however, I decided not do so because it is pratically impossible
+It is also possible to prevent these crashes by checking every single pixel
+of the canvas, however, I decided not do so because it is practically impossible
 to prevent every (obscure) core dump. There may be more strange core dumps
 that I have not encountered.
 
 In order to fix this issue and prevent the server from abruptly stopping,
 the trimap matting operations are implemented by calling the \texttt{matting-cli}
-tool. This will start a secondary process. If the secondary process crashes
-the server is not impacted. The images are passed to the other software using
+tool. This will start a secondary process. If the secondary process crashes,
+the server mustn't be impacted. The images are passed to the other software using
 temporary file in the \texttt{/tmp} directory (automatic cleanup
 is ensured by the Rust memory safety model).
 
-Althought it works, this solution is not how I would have wished to have implemented
-the funcionality. For this reason, I also implemented the direct FFI call. \\
+Although it works, this solution is not how I would have wished to have implemented
+the functionality. For this reason, I also implemented the direct FFI call. \\
 By compiling with the feature \textit{no\_matting\_cli}, e.g.
 \begin{lstlisting}[style=Rust, style=boxed]
     cargo build --release --features no_matting_cli
@@ -703,7 +737,7 @@ a \texttt{multipart/form-data} attribute.
 \subsection{Matting library}
 
 The core of this project is certainly the alpha matting algorithm.
-In order to develope both a CLI and a GUI tool to
+In order to develop both a CLI and a GUI tool to
 use this algorithm, I created a separate library (\texttt{matting-lib})
 containing all the matting and image processing related functions.
 
@@ -774,30 +808,24 @@ impl From<OpencvError> for MessageError;
 impl From<ImageError> for MessageError;
 \end{lstlisting}
 
+\pagebreak
+
 \subsection{Website}
 
-List of website features
+\subsubsection{Features}
 
-The images uploaded cannot be bigger than 2MiB
+The website implements a set of features:
+\begin{enumerate}
+    \item If a transformation is applied whilst the mask is loading,
+    the site will wait until the mask is ready.
+    \item The trimap panting tool aren't enabled until an image is uploaded.
+    \item The mask download button and the transformation
+    selector aren't enabled until a mask has been generated or uploaded.
+    \item The header dropdown is responsive and needs to be toggled when the page
+    is small.
+\end{enumerate}
 
-If a transformation is applies whilst the mask is loading,
-the site will wait until the mask is ready.
-
-The trimap panting tool aren't enabled until an image is uploaded
-
-The mask download button and the transformation
-selector aren't enabled until a mask has been generated or uploaded.
-
-The website will check wheter the image and the mask are of the same size
-
-The website will check wheter the image, mask and replacement image are of the same size
-
-The website will handle error responses from the server with an alert message
-
-The header dropdown is responsive and needs to be toggled when the page
-is small.
-
-While drawing you can press ctrl+z to undo
+% The website will handle error responses from the server with an alert message
 
 \pagebreak
 
@@ -899,11 +927,15 @@ Trimap canvas CSS properties
 
 Everything drawn onto the canvas, meaning each line and fill operations,
 is stored in a stack data structure.
-The the user presses \textsc{ctrl+z}, the last operation
+The user presses \textsc{ctrl+z}, the last operation
 is popped from the stack and everything is drawn again.
 
 This feature is not optimized, so if a few flood fills are
 made the undo feature can get slow, but it is not usually a problem.
+
+\pagebreak
+
+\subsubsection{Design}
 
 \pagebreak
 
@@ -982,12 +1014,12 @@ Here's a list of all the libraries used within the project
 
 \subsection{Logging system}
 
-\subsubsection{Enviromental variables}
+\subsubsection{Environmental variables}
 
 The logging level and logging style can be set
 by exporting the \colorbox{gray!10}{MATTING\_LOG} and \\
 \colorbox{gray!10}{MATTING\_LOG\_STYLE}
-enviromental variables. The variables represent the log level
+environmental variables. The variables represent the log level
 and the log style respectively.
 
 The \colorbox{gray!10}{MATTING\_LOG} variable may assume the following values
@@ -1018,20 +1050,27 @@ to \colorbox{gray!10}{\texttt{info}}. \\
 
 \subsubsection{matting-web}
 
+This program logs to the \colorbox{gray!10}{info},
+\colorbox{gray!10}{debug},
+\colorbox{gray!10}{warn}
+and \colorbox{gray!10}{error} levels.
+
+The default level is set to \colorbox{gray!10}{info}.
+
 \pagebreak
 
 \subsection{Flux Diagrams and Error handling}
 
 \subsubsection{Matting CLI}
 
-Thw following diagram shows the flux of the \texttt{matting-cli} executable.
+The following diagram shows the flux of the \texttt{matting-cli} executable.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{media/swimlane1.pdf}
+    \includegraphics[width=\textwidth]{media/swimlane/swimlane1.pdf}
 \end{figure}
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{media/swimlane2.pdf}
+    \includegraphics[width=\textwidth]{media/swimlane/swimlane2.pdf}
     \caption{CLI Swimlane}
 \end{figure}
 
@@ -1059,7 +1098,7 @@ The numbered labels (\#) represent the possible errors at the given stage.
 Thw following diagram shows the flux of the \texttt{matting-web} executable.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{media/swimlane3.pdf}
+    \includegraphics[width=\textwidth]{media/swimlane/swimlane3.pdf}
     \caption{WEB Swimlane}
 \end{figure}
 
@@ -1069,7 +1108,7 @@ to go back to any previous stage.
 The numbered labels (\#) represent the possible errors at the given stage.
 
 \begin{itemize}
-    \item[\#1] The target is not a valid image or it is bigger than 2MiB.
+    \item[\#1] The target is not a valid image, or it is bigger than 2MiB.
     \item[\#2] The mask could not be generated.
         This is most likely a \textsc{BAD\_REQUEST}
         or \textsc{INTERNAL\_SERVER\_ERROR}.
@@ -1121,8 +1160,8 @@ Tests must be executed in order.
 
 \begin{enumerate}
     \item The compiled executable of the matting-cli software
-    must be placed in a folder specificed in the \textsc{PATH}
-    enviromental variable (e.g. \texttt{/usr/local/bin} or \texttt{/usr/bin}).
+    must be placed in a folder specified in the \textsc{PATH}
+    environmental variable (e.g. \texttt{/usr/local/bin} or \texttt{/usr/bin}).
     \item The matting-cli file must be an executable. It should be enough to run
     \lstinline{chmod +x <file>}.
     \item The user from which the tests will be executed must have permission to execute
@@ -1133,7 +1172,7 @@ Tests must be executed in order.
     \item The user must have the permission to read each resource used and write files
     to the specified locations.
     \item All the resources needed must be in the same directory as the one where the caller executed the commands.
-    \item An image viewer with resizing capabilities along with a graphical enviroment.
+    \item An image viewer with resizing capabilities along with a graphical environment.
     \item The command \texttt{file}.
 \end{enumerate}
 
@@ -1380,7 +1419,8 @@ The output written to the \textsc{stdout} must be empty and a file
 }{%
 \makecell[tl]{
     A message to the \textsc{STDOUT} must warn about the usage of the JPG format \\
-    with transparency. The image must have a black background behind the subject. \\
+    with transparency. The image must have a black background behind the\\
+    subject. \\
     \begin{lstlisting}[style=mattingcli]^^J
     [<date> WARN  matting_cli] The image has an alpha channel but the format is not PNG.^^J
     [<date> WARN  matting_cli] It is advised to change the output format to ".png"^^J
@@ -1460,8 +1500,8 @@ Tests must be executed in order.
 
 \begin{enumerate}
     \item The compiled executable of the matting-cli software
-    must be placed in a folder specificed in the \textsc{PATH}
-    enviromental variable (e.g. \texttt{/usr/local/bin} or \texttt{/usr/bin}).
+    must be placed in a folder specified in the \textsc{PATH}
+    environmental variable (e.g. \texttt{/usr/local/bin} or \texttt{/usr/bin}).
     \item The matting-cli file must be an executable. It should be enough to run
     \lstinline{chmod +x <file>}.
     \item A browser.
@@ -1596,7 +1636,7 @@ The output must look like this and keep logging. \\
 
 \pagebreak
 
-\subsection{Tests result}
+\subsection{Test results}
 
 \definecolor{darkgreen}{rgb}{0, 0.6, 0.2}
 \bgroup{}
@@ -1606,53 +1646,53 @@ The output must look like this and keep logging. \\
         \hline
         \textbf{ID} & \textbf{Result} & \textbf{Note} \\
         \hline
-        \textbf{Test-00} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-00} & \color{darkgreen} Passed & The output looks like the given one. \\
         \hline
-        \textbf{Test-01} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-01} & \color{darkgreen} Passed & The output looks like the given one. \\
         \hline
-        \textbf{Test-02} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-02} & \color{darkgreen} Passed & The output looks like the given one. \\
         \hline
-        \textbf{Test-03} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-03} & \color{darkgreen} Passed & Nothing was done. \\
         \hline
-        \textbf{Test-04} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-04} & \color{darkgreen} Passed & Empty \textsc{stdout} and correct mask generated. \\
         \hline
-        \textbf{Test-05} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-05} & \color{darkgreen} Passed & The background is correct. \\
         \hline
-        \textbf{Test-06} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-06} & \color{darkgreen} Passed & The background is red. \\
         \hline
-        \textbf{Test-07} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-07} & \color{darkgreen} Passed & The background is transparent. \\
         \hline
-        \textbf{Test-08} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-08} & \color{darkgreen} Passed & Every format is correct. \\
         \hline
-        \textbf{Test-09} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-09} & \color{darkgreen} Passed & A warning message is given. \\
         \hline
-        \textbf{Test-10} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-10} & \color{darkgreen} Passed & The mask is saved with the correct name. \\
         \hline
-        \textbf{Test-11} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-11} & \color{darkgreen} Passed & The mask is saved with the correct name. \\
         \hline
-        \textbf{Test-12} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-12} & \color{darkgreen} Passed & Error messages are given. \\
         \hline
-        \textbf{Test-13} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-13} & \color{darkgreen} Passed & The mask is correctly generated. \\
         \hline
-        \textbf{Test-14} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-14} & \color{darkgreen} Passed & The image is correctly saved. \\
         \hline
-        \textbf{Test-15} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-15} & \color{darkgreen} Passed & The result has a transparent background. \\
         \hline
-        \textbf{Test-16} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-16} & \color{darkgreen} Passed & The result has a colored background. \\
         \hline
-        \textbf{Test-17} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-17} & \color{darkgreen} Passed & The result has an image as a background. \\
         \hline
-        \textbf{Test-18} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-18} & \color{darkgreen} Passed & The image is correctly saved. \\
         \hline
-        \textbf{Test-19} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-19} & \color{darkgreen} Passed & An alert message is displayed. \\
         \hline
-        \textbf{Test-20} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-20} & \color{darkgreen} Passed & The server does not crash. \\
         \hline
-        \textbf{Test-21} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-21} & \color{darkgreen} Passed & An alert message is displayed. \\
         \hline
-        \textbf{Test-22} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-22} & \color{darkgreen} Passed & The output looks like the given one. \\
         \hline
-        \textbf{Test-23} & \color{darkgreen} Passed & \- \\
+        \textbf{Test-23} & \color{darkgreen} Passed & The output looks like the given one. \\
         \hline
     \end{tabular}
 \end{center}
@@ -1679,7 +1719,7 @@ and improvements that could be made.
     \item \textbf{Trimap upload}: It could be useful if the user was able to
     directly upload a trimap for a given image, rather than having to always draw it.
     \item \textbf{Automatic cropping}: When a user upload an image replacement for the background.
-    it would be useful if it could be cropped to the correct size directly within the website.
+    It would be useful if it could be cropped to the correct size directly within the website.
     \item \textbf{Website format handling}: Unlike the CLI version, the web application does
     not handle different formats. Everything is converted into a PNG and saved as one.
     The user has to manually convert the resulting image into another format.
@@ -1688,6 +1728,8 @@ and improvements that could be made.
 \end{enumerate}
 
 \subsection{Personal conclusions}
+
+I really enjoyed this project for its semplicity and usefulness.
 
 \pagebreak
 
