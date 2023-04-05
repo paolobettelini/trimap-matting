@@ -16,5 +16,25 @@ matting-cli --target target.jpg --mask mask.png --output out.png --replace backg
 ```
 
 ## To install
+Install the requirements
 ```bash
 sudo pacman -S libwebp clang qt5-base opencv
+```
+### Compile the CLI
+```bash
+cd matting-cli
+cargo build --release
+```
+### Compile the GUI
+```bash
+cd matting-web
+cargo build --release
+```
+
+## Compile the documents
+```bash
+mandate/resources/documentation/compile.sh
+mandate/resources/abstract/compile.sh
+mandate/resources/diaries/compile.sh
+```
+The documents will be placed in `mandate/`.
