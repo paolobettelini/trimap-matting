@@ -12,6 +12,7 @@
 \usepackage{adjustbox}
 
 \usepackage{lpi}
+\usepackage{tikz-uml}
 
 \addbibresource{./references.bib}
 \graphicspath{ {./media} } % sections/images
@@ -198,7 +199,9 @@ All the source code and documents can be found at
 
 \pagebreak
 
-\section{Requirements}
+\section{Analysis}
+
+\subsection{Requirements}
 
 \requirement{00}{\gls{CLI} tool}{1}{1.1}{none}{
     A \gls{CLI} tool to execute background removal must be developed.
@@ -241,6 +244,66 @@ All the source code and documents can be found at
     The programs must have logging capabilities
 }{%
 }
+
+\pagebreak
+
+\subsection{Use Case}
+
+The following diagrams illustrates the actions that an actor can perform using
+the \gls{CLI} or \gls{GUI} applications.
+
+\begin{tikzpicture}
+    \begin{umlsystem}[x=1] {} % empty title
+        \umlusecase[x=1, y=-2, name=br, width=2cm] {Background Removal}
+
+        \umlusecase[x=7, y=-1, name=tu, width=2cm] {Target Upload}
+        
+        \umlusecase[x=7, y=1, name=im1, width=2cm] {Image Controls}
+        \umlusecase[x=7, y=-3, name=t, width=2cm] {Alpha Mask Processing}
+
+        \umlusecase[x=12, y=1, name=im3, width=1.5cm] {Image Controls}
+
+        \umlusecase[x=12, y=-1.5, name=u, width=1.5cm] {Upload}
+        \umlusecase[x=12, y=-3, name=d, width=1.5cm] {Draw Trimap}
+        \umlusecase[x=12, y=-4.5, name=dl1, width=1.5cm] {Mask Download}
+
+        \umlusecase[x=1, y=-6, name=brep, width=2cm] {Background Replacement}
+
+        \umlusecase[x=7, y=-4.5, name=trans, width=2cm] {Transparent Removal}
+        \umlusecase[x=7, y=-6, name=fill, width=2cm] {Fillage Removal}
+        \umlusecase[x=7, y=-7.5, name=replace, width=2cm] {Replacement Removal}
+
+        \umlusecase[x=12, y=-7.5, name=ru, width=2cm] {Replacement Upload}
+    
+        \umlusecase[x=12, y=-9.5, name=im2, width=2cm] {Image Controls}
+        \umlusecase[x=1, y=-9.5, name=dl2, width=2cm] {Result Download}
+    \end{umlsystem}
+    \node [above] at (current bounding box.north) {Application};
+
+    \umlactor[x=-1, y=0] {Actor}
+
+    \umlassoc{Actor}{br}
+
+    \draw [tikzuml dependency style] (br) -- node[above] {\(\ll includes \gg\)} (tu);
+    \draw [tikzuml dependency style] (tu) -- node[left] {\(\ll includes \gg\)} (im1);
+    \draw [tikzuml dependency style] (br) -- node[above] {\(\ll includes \gg\)} (t);
+    \draw [tikzuml dependency style] (brep) -- node[right] {\(\ll extends \gg\)} (br);
+    \draw [tikzuml dependency style] (replace) -- node[above] {\(\ll includes \gg\)} (ru);
+    
+    \draw [tikzuml dependency style] (dl1) -- node[above] {\(\ll extends\gg\)} (t);
+    \draw [tikzuml dependency style] (d) -- node[above] {\(\ll extends\gg\)} (t);
+    \draw [tikzuml dependency style] (u) -- node[above] {\(\ll extends\gg\)} (t);
+
+    \draw [tikzuml dependency style] (u) -- node[left] {\(\ll includes\gg\)} (im3);
+    
+    \draw [tikzuml dependency style] (trans) -- node[above] {\(\ll extends\gg\)} (brep);
+    \draw [tikzuml dependency style] (fill) -- node[above] {\(\ll extends\gg\)} (brep);
+    \draw [tikzuml dependency style] (replace) -- node[above] {\(\ll extends\gg\)} (brep);
+    \draw [tikzuml dependency style] (dl2) -- node[right] {\(\ll extends\gg\)} (brep);
+
+    
+    \draw [tikzuml dependency style] (ru) -- node[right] {\(\ll includes\gg\)} (im2);
+\end{tikzpicture}
 
 \pagebreak
 
@@ -715,6 +778,9 @@ The following command starts the server and logs everything to a file.
     \caption{Initial Gantt Chart}
 \end{figure}
 
+The initial plan was to dedicate approximately half the time to the \gls{CLI}
+program and the remaining half to the \gls{GUI} application.
+
 \newpage
 
 \subsection{Final Gantt Chart}
@@ -723,6 +789,14 @@ The following command starts the server and logs everything to a file.
     \includegraphics[width=\textwidth]{gantt/gantt2.jpg}
     \caption{Final Gantt Chart}
 \end{figure}
+
+The project was more easy than I had anticipated. In fact,
+I had built a working prototype of the \gls{CLI} program in less than 3 weeks.
+The difficulty of the core functionality was overestimated,
+and the core of the project was already built halfway through the project.
+However, I found myself constantly adding little features and fixed
+to the \gls{GUI} and \gls{CLI} throughout the second half of the working sessions.
+I should have focused earlier on technical points and completing the documentation.
 
 % -- CONTENT --
 
@@ -1992,6 +2066,15 @@ and improvements that could be made.
 \subsection{Personal conclusions}
 
 I really enjoyed this project for its semplicity and usefulness.
+The final product works as expected and it can be effectively used
+for actual background removal.
+I am not quite satisfied with the OpenCV library.
+Their matting module causes core dumps if it cannot generate
+an alpha matte mask. This has been quite obnoxious
+as I could not develop the application precisely as I would have liked
+it to be. Nevertheless, I really enjoyed being able to
+have used the Rust programming language, which has simplified
+my work a lot.
 
 \pagebreak
 
